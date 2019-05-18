@@ -1,12 +1,9 @@
 package com.aspengrades.data;
 
-import android.os.Parcelable;
-
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-public class Cookies implements Serializable {
+public class Cookies {
 
     private Map<String, String> cookies;
 

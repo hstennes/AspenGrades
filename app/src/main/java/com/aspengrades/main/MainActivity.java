@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aspengrades.data.Assignment;
@@ -27,18 +28,23 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements LoginListener, ClassesListener, ClassInfoListener {
 
     private Cookies cookies;
+    private Button buttonLogin;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button buttonLogin = findViewById(R.id.button_login);
+        buttonLogin = findViewById(R.id.button_login);
+        progressBar = findViewById(R.id.progress_circular);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.text_error).setVisibility(View.INVISIBLE);
                 String username = ((EditText) findViewById(R.id.edit_username)).getText().toString();
                 String password = ((EditText) findViewById(R.id.edit_password)).getText().toString();
+                buttonLogin.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
                 LoginManager.attemptLogin(MainActivity.this, username, password);
             }
         });
@@ -61,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
         TextView textViewError = findViewById(R.id.text_error);
         textViewError.setText(getString(R.string.text_invalid_credentials));
         textViewError.setVisibility(View.VISIBLE);
+        buttonLogin.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -69,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
         TextView textViewError = findViewById(R.id.text_error);
         textViewError.setText(getString(R.string.text_aspen_error));
         textViewError.setVisibility(View.VISIBLE);
+        buttonLogin.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -77,8 +87,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
         for(SchoolClass schoolClass : classes){
             System.out.println(schoolClass);
         }
-        //ClassInfo.readClassInfo(this, classes.get(7).getId(), classList.getToken(), cookies);
-        ClassList.readClasses(this, cookies);
+        ClassInfo.readClassInfo(this, classes.get(7).getId(), classList.getToken(), cookies);
     }
 
     @Override

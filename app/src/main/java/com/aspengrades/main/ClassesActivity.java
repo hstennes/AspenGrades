@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
-import com.aspengrades.data.ClassList;
-import com.aspengrades.data.ClassesListener;
 import com.aspengrades.data.Cookies;
 import com.aspengrades.data.TermLoader;
 

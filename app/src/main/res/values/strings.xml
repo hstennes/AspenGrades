@@ -5,4 +5,6 @@
     <string name="button_login">Login</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
+    <string name="extra_cookie_keys">keys</string>
+    <string name="extra_cookie_values">values</string>
 </resources>

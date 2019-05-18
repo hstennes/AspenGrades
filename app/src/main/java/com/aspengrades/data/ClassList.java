@@ -11,16 +11,20 @@ import java.util.ArrayList;
 
 public class ClassList {
 
+    public static final int NUM_TERMS = 4;
     public static final String CLASSES_URL = "https://aspen.cps.edu/aspen/portalClassList.do?navkey=academics.classes.list";
     public static final String CLASS_FORM_EVENT = "2100";
     public static final String TERM_SELECT_EVENT = "950";
     private static final int NUM_CLASS_ATTRIBUTES = 11;
+    private static final String[] TERM_CODES = new String[] {"current", "gtmQ10000000Q1", "gtmQ20000000Q2", "gtmQ30000000Q3", "gtmQ40000000Q4"};
 
     private ArrayList<SchoolClass> classes;
+    private int term;
     private String token;
 
-    private ClassList(ArrayList<SchoolClass> classes, String token){
+    private ClassList(ArrayList<SchoolClass> classes, int term, String token){
         this.classes = classes;
+        this.term = term;
         this.token = token;
     }
 
@@ -28,12 +32,16 @@ public class ClassList {
         new ReadClassesTask(listener).execute(cookies);
     }
 
-    public static void readClasses(ClassesListener listener, String termFilter, Cookies cookies){
-        new ReadClassesTask(listener, termFilter).execute(cookies);
+    public static void readClasses(ClassesListener listener, int term, Cookies cookies){
+        new ReadClassesTask(listener, term).execute(cookies);
     }
 
     public ArrayList<SchoolClass> getClasses() {
         return classes;
+    }
+
+    public int getTerm(){
+        return term;
     }
 
     public String getToken() {
@@ -43,15 +51,15 @@ public class ClassList {
     private static class ReadClassesTask extends AsyncTask<Cookies, Void, ClassList>{
 
         private ClassesListener listener;
-        private String termFilter = "";
+        private int term = 0;
 
         private ReadClassesTask(ClassesListener listener){
             this.listener = listener;
         }
 
-        private ReadClassesTask(ClassesListener listener, String termFilter){
+        private ReadClassesTask(ClassesListener listener, int term){
             this.listener = listener;
-            this.termFilter = termFilter;
+            this.term = term;
         }
 
         @Override
@@ -69,17 +77,17 @@ public class ClassList {
                 if(row.childNodeSize() >= NUM_CLASS_ATTRIBUTES && row.siblingIndex() != 0) classes.add(new SchoolClass(row));
             }
             String token = getToken(doc);
-            return new ClassList(classes, token);
+            return new ClassList(classes, term, token);
         }
 
         private Document getDoc(Cookies cookies) throws IOException {
             Document doc = Jsoup.connect(CLASSES_URL).timeout(10000).cookies(cookies.getCookieMap()).get();
-            if(!termFilter.equals("")){
+            if(term != 0){
                 return Jsoup.connect(CLASSES_URL)
                         .data("org.apache.struts.taglib.html.TOKEN", getToken(doc))
                         .data("userEvent", TERM_SELECT_EVENT)
                         .data("yearFilter", "current")
-                        .data("termFilter", termFilter)
+                        .data("termFilter", TERM_CODES[term])
                         .cookies(cookies.getCookieMap())
                         .post();
             }

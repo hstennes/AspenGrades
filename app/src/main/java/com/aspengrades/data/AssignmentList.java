@@ -33,23 +33,6 @@ public class AssignmentList extends ArrayList<Assignment> {
         return this;
     }
 
-    public HashMap<String, String> listGradeTerms(Cookies cookies, String token){
-        Document doc;
-        try {
-            doc = getDoc(cookies, "", token);
-        }catch (IOException e){
-            e.printStackTrace();
-            return null;
-        }
-
-        HashMap<String, String> termMap = new HashMap<>();
-        Element td = doc.getElementsByClass("detailValue").get(1);
-        for(Element child : td.child(0).children()){
-            termMap.put(child.text(), child.val());
-        }
-        return termMap;
-    }
-
     private Document getDoc(Cookies cookies, String gradeTermOid, String token) throws IOException {
         return Jsoup.connect(ASSIGNMENTS_URL)
                 .data("org.apache.struts.taglib.html.TOKEN", token)

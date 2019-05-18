@@ -48,7 +48,7 @@
             android:id="@+id/button_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
+            android:background="@drawable/background_login_button"
             android:textColor="#FFFFFF"
             android:text="@string/button_login"/>
 
@@ -57,8 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_centerHorizontal="true"
-            />
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

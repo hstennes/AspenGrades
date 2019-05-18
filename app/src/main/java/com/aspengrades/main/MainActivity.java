@@ -1,8 +1,10 @@
 package com.aspengrades.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,21 +66,13 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
     @Override
     public void onInvalidCredentials(){
         System.out.println("Incorrect username/password");
-        TextView textViewError = findViewById(R.id.text_error);
-        textViewError.setText(getString(R.string.text_invalid_credentials));
-        textViewError.setVisibility(View.VISIBLE);
-        buttonLogin.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+        loginUnsuccessful(getString(R.string.text_invalid_credentials));
     }
 
     @Override
     public void onLoginFailed(){
         System.out.println("Login failed");
-        TextView textViewError = findViewById(R.id.text_error);
-        textViewError.setText(getString(R.string.text_aspen_error));
-        textViewError.setVisibility(View.VISIBLE);
-        buttonLogin.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+        loginUnsuccessful(getString(R.string.text_aspen_error));
     }
 
     @Override
@@ -96,5 +90,13 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
         AssignmentList aList = classInfo.getAssignmentList();
         for(Category category : cList) System.out.println(category);
         for(Assignment assignment : aList) System.out.println(assignment);
+    }
+
+    private void loginUnsuccessful(String text){
+        TextView textViewError = findViewById(R.id.text_error);
+        textViewError.setText(text);
+        textViewError.setVisibility(View.VISIBLE);
+        buttonLogin.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 }

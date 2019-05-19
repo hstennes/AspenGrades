@@ -2,6 +2,8 @@ package com.aspengrades.data;
 
 import android.os.AsyncTask;
 
+import java.io.IOException;
+
 public class ClassInfo {
 
     private CategoryList cList;
@@ -45,7 +47,11 @@ public class ClassInfo {
 
         @Override
         protected ClassInfo doInBackground(TaskParams... params) {
-            new ClassSelector().selectClass(params[0]);
+            try {
+                new ClassSelector().selectClass(params[0]);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
             CategoryList cList = new CategoryList().readCategories(params[0].cookies);
             AssignmentList aList = new AssignmentList().readAssignments(params[0].cookies, params[0].classesToken);
             return new ClassInfo(cList, aList);

@@ -56,11 +56,13 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
     public void onLoginSuccessful(Cookies cookies){
         System.out.println("Login successful");
         this.cookies = cookies;
+
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
-        Map<String, String> cookieMap = cookies.getCookieMap();
-        intent.putExtra(getString(R.string.extra_cookie_keys), cookieMap.keySet().toArray(new String[1]));
-        intent.putExtra(getString(R.string.extra_cookie_values), cookieMap.values().toArray(new String[1]));
+        intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());
+        intent.putExtra(getString(R.string.extra_cookie_values), cookies.getValues());
         startActivity(intent);
+
+        //ClassList.readClasses(this, 1, cookies);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener, Cl
         for(SchoolClass schoolClass : classes){
             System.out.println(schoolClass);
         }
-        ClassInfo.readClassInfo(this, classes.get(7).getId(), classList.getToken(), cookies);
+        ClassInfo.readClassInfo(this, classes.get(9).getId(), classList.getToken(), cookies);
     }
 
     @Override

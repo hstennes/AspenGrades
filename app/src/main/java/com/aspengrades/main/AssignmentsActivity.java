@@ -1,0 +1,72 @@
+package com.aspengrades.main;
+
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
+import com.aspengrades.data.ClassInfo;
+import com.aspengrades.data.ClassInfoListener;
+import com.aspengrades.data.Cookies;
+import com.aspengrades.data.TermSelector;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
+public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener {
+
+    private String id;
+    private String token;
+    private Cookies cookies;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        setContentView(R.layout.activity_assignments);
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        id = intent.getStringExtra(getString(R.string.extra_class_id));
+        token = intent.getStringExtra(getString(R.string.extra_token));
+        String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
+        String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
+        int term = intent.getIntExtra(getString(R.string.extra_term), 0);
+        cookies = Cookies.from(keys, values);
+        new TermSelectorTask(this, term).execute(cookies);
+    }
+
+    public void onTermSelected() {
+        ClassInfo.readClassInfo(this, id, token, cookies);
+    }
+
+    @Override
+    public void onClassInfoRead(ClassInfo classInfo) {
+        TextView tv = findViewById(R.id.text_test);
+        tv.setText(classInfo.getAssignmentList().get(0).getName());
+    }
+
+    private static class TermSelectorTask extends AsyncTask<Cookies, Void, Void>{
+        private WeakReference<AssignmentsActivity> callback;
+        private int term;
+
+        public TermSelectorTask(AssignmentsActivity activity, int term){
+            callback = new WeakReference<>(activity);
+            this.term = term;
+        }
+
+        @Override
+        protected Void doInBackground(Cookies... cookies) {
+            try {
+                new TermSelector().selectTerm(cookies[0], term);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void nothing){
+            callback.get().onTermSelected();
+        }
+    }
+}

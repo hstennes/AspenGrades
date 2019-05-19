@@ -1,7 +1,7 @@
 package com.aspengrades.data;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Cookies {
 
@@ -16,16 +16,18 @@ public class Cookies {
     }
 
     public String[] getKeys(){
-        return setToArray(cookies.keySet());
+        return cookies.keySet().toArray(new String[1]);
     }
 
-    private String[] setToArray(Set<String> set){
-        String[] strs = new String[set.size()];
-        int i = 0;
-        for(String s : set){
-            strs[i] = s;
-            i++;
+    public String[] getValues(){
+        return cookies.values().toArray(new String[1]);
+    }
+
+    public static Cookies from(String[] keys, String[] values){
+        HashMap<String, String> cookieMap = new HashMap<>();
+        for(int i = 0; i < keys.length; i++){
+            cookieMap.put(keys[i], values[i]);
         }
-        return strs;
+        return new Cookies(cookieMap);
     }
 }

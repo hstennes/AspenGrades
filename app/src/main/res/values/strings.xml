@@ -8,4 +8,7 @@
     <string name="hint_password">Password</string>
     <string name="extra_cookie_keys">keys</string>
     <string name="extra_cookie_values">values</string>
+    <string name="extra_class_id">class id</string>
+    <string name="extra_token">token</string>
+    <string name="extra_term">term</string>
 </resources>

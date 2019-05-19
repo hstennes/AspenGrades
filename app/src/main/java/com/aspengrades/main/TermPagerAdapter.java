@@ -11,9 +11,11 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
 
     private ClassList[] classLists;
     private Fragment[] fragments;
+    private ClassesActivity classesActivity;
 
-    public TermPagerAdapter(FragmentManager fm) {
+    public TermPagerAdapter(FragmentManager fm, ClassesActivity classesActivity) {
         super(fm);
+        this.classesActivity = classesActivity;
         classLists = new ClassList[ClassList.NUM_TERMS];
         fragments = new Fragment[ClassList.NUM_TERMS];
     }
@@ -21,7 +23,7 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
     @Override
     public Fragment getItem(int i) {
         TermFragment fragment = new TermFragment();
-        fragment.setClassList(classLists[i]);
+        fragment.giveParams(classLists[i], classesActivity);
         fragments[i] = fragment;
         return fragment;
     }

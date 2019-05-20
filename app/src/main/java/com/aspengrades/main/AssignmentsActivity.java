@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.ClassInfoListener;
@@ -41,8 +44,13 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
 
     @Override
     public void onClassInfoRead(ClassInfo classInfo) {
-        TextView tv = findViewById(R.id.text_test);
-        tv.setText(classInfo.getAssignmentList().get(0).getName());
+        ProgressBar progressBar = findViewById(R.id.progress_circular);
+        progressBar.setVisibility(View.GONE);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        CategoryAdapter adapter = new CategoryAdapter(classInfo, this);
+        recyclerView.setAdapter(adapter);
     }
 
     private static class TermSelectorTask extends AsyncTask<Cookies, Void, Void>{

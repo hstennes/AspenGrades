@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AssignmentList extends ArrayList<Assignment> {
 

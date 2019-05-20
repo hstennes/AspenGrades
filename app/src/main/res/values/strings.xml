@@ -3,6 +3,8 @@
     <string name="text_invalid_credentials">Invalid username or password</string>
     <string name="text_aspen_error">Aspen is not available</string>
     <string name="text_term">Term %1$s</string>
+    <string name="text_weight">Weight: %1$s</string>
+    <string name="text_no_assignments">No assignments</string>
     <string name="button_login">Login</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>

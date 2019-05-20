@@ -18,7 +18,6 @@ import com.aspengrades.data.ClassList;
 import com.aspengrades.data.ClassesListener;
 import com.aspengrades.data.SchoolClass;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TermFragment extends Fragment implements View.OnClickListener, ClassesListener {
@@ -87,17 +86,17 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             float gradeVal = schoolClass.getTermGrade();
             if(gradeVal != -1) {
                 grade.setText(Float.toString(gradeVal));
+                classButton.setOnClickListener(this);
             }
             classButton.getBackground().setColorFilter(getColor(gradeVal), PorterDuff.Mode.SRC);
-
             classesLayout.addView(classButton, classesLayout.getChildCount() - 1);
-            classButton.setOnClickListener(this);
         }
     }
 
     private int getColor(float gradeVal){
         int gradeInt = Math.round(gradeVal);
         Context context = getContext();
+        if(context == null) return 0;
         if(gradeInt > 89) return ContextCompat.getColor(context, R.color.colorA);
         else if(gradeInt > 79) return ContextCompat.getColor(context, R.color.colorB);
         else if(gradeInt > 69) return ContextCompat.getColor(context, R.color.colorC);

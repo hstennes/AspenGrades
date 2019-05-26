@@ -12,19 +12,13 @@ public class AssignmentList extends ArrayList<Assignment> {
     public static final String ASSIGNMENTS_URL = "https://aspen.cps.edu/aspen/portalAssignmentList.do?navkey=academics.classes.list.gcd";
     private static final String ASSIGNMENT_FORM_EVENT = "2210";
 
-    public AssignmentList readAssignments(Cookies cookies, String classesToken){
+    public AssignmentList readAssignments(Cookies cookies, String classesToken) throws IOException{
         return readAssignments(cookies, "", classesToken);
     }
 
-    public AssignmentList readAssignments(Cookies cookies, String gradeTermOid, String classesToken) {
+    public AssignmentList readAssignments(Cookies cookies, String gradeTermOid, String classesToken) throws IOException{
         Document doc;
-        try {
-            doc = getDoc(cookies, gradeTermOid, classesToken);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        doc = getDoc(cookies, gradeTermOid, classesToken);
         Element tbody = doc.getElementById("dataGrid").child(0).child(0);
         for (int i = 1; i < tbody.childNodeSize() / 2 - 1; i++) {
             add(new Assignment(tbody.children().get(i)));

@@ -1,17 +1,22 @@
 package com.aspengrades.main;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.aspengrades.data.Assignment;
 import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.ClassInfoListener;
 import com.aspengrades.data.Cookies;
@@ -19,6 +24,8 @@ import com.aspengrades.data.TermSelector;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import javax.xml.transform.Result;
 
 public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener {
 
@@ -52,6 +59,16 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
     public void onClassInfoRead(ClassInfo classInfo) {
         ProgressBar progressBar = findViewById(R.id.progress_circular);
         progressBar.setVisibility(View.GONE);
+        int status  = classInfo.getStatus();
+
+        if(status == ClassInfo.SESSION_EXPIRED)
+            AlertUtil.showSessionExpiredAlert(this);
+        else if(status == ClassInfo.ASPEN_UNAVAILABLE)
+            findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+        else setupRecyclerView(classInfo);
+    }
+
+    private void setupRecyclerView(ClassInfo classInfo){
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

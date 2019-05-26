@@ -1,8 +1,11 @@
 package com.aspengrades.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,11 +21,17 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
 
     private Button buttonLogin;
     private ProgressBar progressBar;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.toolbar_login);
+
         buttonLogin = findViewById(R.id.button_login);
         progressBar = findViewById(R.id.progress_circular);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -34,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
                 buttonLogin.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
                 LoginManager.attemptLogin(MainActivity.this, username, password);
+                MainActivity.this.username = username;
+                MainActivity.this.password = password;
             }
         });
     }
@@ -41,6 +52,12 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
     @Override
     public void onLoginSuccessful(Cookies cookies){
         System.out.println("Login successful");
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.saved_username_key), username);
+        editor.putString(getString(R.string.saved_password_key), password);
+        editor.apply();
+
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
         intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());
         intent.putExtra(getString(R.string.extra_cookie_values), cookies.getValues());

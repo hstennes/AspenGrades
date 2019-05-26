@@ -1,18 +1,21 @@
 package com.aspengrades.main;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aspengrades.data.Assignment;
 import com.aspengrades.data.AssignmentList;
 import com.aspengrades.data.Category;
 import com.aspengrades.data.ClassInfo;
+import com.aspengrades.util.ColorUtil;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
@@ -40,6 +43,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.textCategory.setText(category.getName());
         holder.textCategoryGrade.setText(category.getGrade() == -1 ? "" : Float.toString(category.getGrade()));
         holder.textWeight.setText(context.getString(R.string.text_weight, Float.toString(category.getWeight())));
+        holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
 
         if(assignments.size() != 0) holder.textNoAssignments.setVisibility(View.GONE);
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -61,15 +65,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     class CategoryHolder extends RecyclerView.ViewHolder {
 
         TextView textCategory, textWeight, textCategoryGrade, textNoAssignments;
+        RelativeLayout layoutHeader;
         LinearLayout layoutAssignments;
 
-        public CategoryHolder(@NonNull View itemView) {
-            super(itemView);
-            textCategory = itemView.findViewById(R.id.text_category);
-            textWeight = itemView.findViewById(R.id.text_weight);
-            textCategoryGrade = itemView.findViewById(R.id.text_category_grade);
-            layoutAssignments = itemView.findViewById(R.id.layout_assignments);
-            textNoAssignments = itemView.findViewById(R.id.text_no_assignments);
+        public CategoryHolder(@NonNull View view) {
+            super(view);
+            textCategory = view.findViewById(R.id.text_category);
+            textWeight = view.findViewById(R.id.text_weight);
+            textCategoryGrade = view.findViewById(R.id.text_category_grade);
+            textNoAssignments = view.findViewById(R.id.text_no_assignments);
+            layoutHeader = view.findViewById(R.id.layout_header);
+            layoutAssignments = view.findViewById(R.id.layout_assignments);
         }
     }
 }

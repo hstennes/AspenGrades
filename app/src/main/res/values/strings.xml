@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AspenPortal</string>
+    <string name="toolbar_login">Login</string>
     <string name="text_invalid_credentials">Invalid username or password</string>
     <string name="text_aspen_error">Aspen is not available</string>
     <string name="text_term">Term %1$s</string>
@@ -13,4 +14,9 @@
     <string name="extra_class_id">class id</string>
     <string name="extra_token">token</string>
     <string name="extra_term">term</string>
+    <string name="extra_class_description">description</string>
+    <string name="action_logout">logout</string>
+    <string name="preference_file_key">com.aspengrades.USERNAME_PASSWORD</string>
+    <string name="saved_username_key">username</string>
+    <string name="saved_password_key">password</string>
 </resources>

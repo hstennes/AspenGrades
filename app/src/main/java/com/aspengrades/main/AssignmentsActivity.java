@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -27,8 +30,11 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
     public void onCreate(Bundle savedInstanceState){
         setContentView(R.layout.activity_assignments);
         super.onCreate(savedInstanceState);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
+        getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.extra_class_description)));
         id = intent.getStringExtra(getString(R.string.extra_class_id));
         token = intent.getStringExtra(getString(R.string.extra_token));
         String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));

@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.aspengrades.data.Cookies;
 import com.aspengrades.data.TermLoader;
@@ -17,6 +20,8 @@ public class ClassesActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classes);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
         String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
@@ -30,6 +35,16 @@ public class ClassesActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(pager);
         new TermLoader(adapter, cookies).readAllTerms(1);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_classes, menu);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() { }
 
     public Cookies getCookies(){
         return cookies;

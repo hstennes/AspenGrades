@@ -25,7 +25,9 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:background="#FFFFFF"
+        android:background="@color/colorPrimary"
+        app:tabTextColor="#FFFFFF"
+        app:tabIndicatorColor="#FFFFFF"
         android:layout_height="wrap_content"/>
 
 </RelativeLayout>

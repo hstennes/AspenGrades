@@ -21,7 +21,8 @@
                 android:id="@+id/text_term"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
                 android:textSize="25sp" />
 
             <Space

@@ -3,9 +3,8 @@ package com.aspengrades.main;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.aspengrades.data.Cookies;
 import com.aspengrades.data.LoginListener;
 import com.aspengrades.data.LoginManager;
-import com.aspengrades.util.ColorUtil;
 
 
 public class MainActivity extends AppCompatActivity implements LoginListener {
@@ -50,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
             intent.putExtra(getString(R.string.saved_password_key), password);
             startActivity(intent);
         }
-
     }
 
     @Override

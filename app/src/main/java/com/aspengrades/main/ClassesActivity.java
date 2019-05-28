@@ -20,7 +20,9 @@ import com.aspengrades.data.TermLoader;
 public class ClassesActivity extends AppCompatActivity implements LoginListener {
 
     private Cookies cookies;
+    private ViewPager pager;
     private TermPagerAdapter adapter;
+    private int favTerm;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -28,6 +30,14 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         setContentView(R.layout.activity_classes);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        favTerm = readFavTerm();
+
+        adapter = new TermPagerAdapter(getSupportFragmentManager(), this);
+        pager = findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(pager);
+        pager.setCurrentItem(favTerm - 1);
 
         Intent intent = getIntent();
         boolean loggedIn = intent.hasExtra(getString(R.string.extra_cookie_keys));
@@ -35,20 +45,20 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
             String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
             cookies = Cookies.from(keys, values);
+            new TermLoader(adapter, cookies).readAllTerms(favTerm);
         }
         else{
             String username = intent.getStringExtra(getString(R.string.saved_username_key));
             String password = intent.getStringExtra(getString(R.string.saved_password_key));
             LoginManager.attemptLogin(this, username, password);
         }
+    }
 
-        adapter = new TermPagerAdapter(getSupportFragmentManager(), this);
-        ViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(pager);
-
-        if(loggedIn) new TermLoader(adapter, cookies).readAllTerms(1);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_classes, menu);
+        return true;
     }
 
     @Override
@@ -63,9 +73,15 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+        writeFavTerm();
+    }
+
+    @Override
     public void onLoginSuccessful(Cookies cookies) {
         this.cookies = cookies;
-        new TermLoader(adapter, cookies).readAllTerms(1);
+        new TermLoader(adapter, cookies).readAllTerms(favTerm);
     }
 
     @Override
@@ -78,17 +94,22 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         relaunchMainActivity();
     }
 
+    private int readFavTerm(){
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.fav_term_file_key), Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(getString(R.string.saved_fav_term_key), 1);
+    }
+
+    private void writeFavTerm(){
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.fav_term_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(getString(R.string.saved_fav_term_key), pager.getCurrentItem() + 1);
+        editor.apply();
+    }
+
     private void relaunchMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(getString(R.string.extra_main_activity_relaunch), true);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_classes, menu);
-        return true;
     }
 
     public Cookies getCookies(){

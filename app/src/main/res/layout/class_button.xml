@@ -6,8 +6,9 @@
     android:textAlignment="textStart"
     android:padding="10dp"
     android:clickable="true"
+    android:focusable="true"
     android:layout_marginHorizontal="10dp"
-    android:layout_marginVertical="5dp"
+    android:layout_marginVertical="3dp"
     android:background="@drawable/background_class_button">
 
     <TextView

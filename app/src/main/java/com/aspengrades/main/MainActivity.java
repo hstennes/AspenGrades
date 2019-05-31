@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onLoginSuccessful(Cookies cookies){
-        System.out.println("Login successful");
         saveUsernamePassword();
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
         intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());
@@ -62,13 +61,11 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onInvalidCredentials(){
-        System.out.println("Incorrect username/password");
         loginUnsuccessful(getString(R.string.text_invalid_credentials));
     }
 
     @Override
     public void onLoginFailed(){
-        System.out.println("Login failed");
         loginUnsuccessful(getString(R.string.text_aspen_error));
     }
 

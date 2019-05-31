@@ -97,7 +97,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
                 classButton.setOnClickListener(this);
             }
             classButton.getBackground().setColorFilter(ColorUtil.colorFromGrade(getContext(), gradeVal), PorterDuff.Mode.SRC);
-            classesLayout.addView(classButton, classesLayout.getChildCount() - 1);
+            classesLayout.addView(classButton);
         }
     }
 

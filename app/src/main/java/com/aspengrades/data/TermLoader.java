@@ -29,7 +29,6 @@ public class TermLoader implements ClassesListener {
         if(classList != null) Log.d("TermLoader", "Loaded term " + classList.getTerm());
         if(classesListener != null) classesListener.onClassesRead(classList);
         loadingIndex++;
-
         if(loadingIndex >= loadingOrder.length) done = true;
         else if(continueLoading)
             ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
@@ -40,8 +39,10 @@ public class TermLoader implements ClassesListener {
     }
 
     public void resumeIfNecessary(){
-        continueLoading = true;
-        if(!done) ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
+        if(!done && !continueLoading) {
+            continueLoading = true;
+            ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
+        }
     }
 
     private int[] getLoadingOrder(int priorityTerm) {

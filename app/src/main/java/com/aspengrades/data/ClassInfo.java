@@ -5,17 +5,17 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class ClassInfo {
+import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
+import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
-    public static final int SUCCESSFUL = 1;
-    public static final int SESSION_EXPIRED = 2;
-    public static final int ASPEN_UNAVAILABLE = 3;
+public class ClassInfo {
 
     private CategoryList cList;
     private AssignmentList aList;
-    private int status;
+    private AspenTaskStatus status;
 
-    private ClassInfo(CategoryList cList, AssignmentList aList, int status){
+    private ClassInfo(CategoryList cList, AssignmentList aList, AspenTaskStatus status){
         this.cList = cList;
         this.aList = aList;
         this.status = status;
@@ -45,7 +45,7 @@ public class ClassInfo {
         return aList;
     }
 
-    public int getStatus(){
+    public AspenTaskStatus getStatus(){
         return status;
     }
 

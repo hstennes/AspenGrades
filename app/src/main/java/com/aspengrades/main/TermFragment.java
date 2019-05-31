@@ -68,6 +68,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         intent.putExtra(getString(R.string.extra_cookie_keys), classesActivity.getCookies().getKeys());
         intent.putExtra(getString(R.string.extra_cookie_values), classesActivity.getCookies().getValues());
         intent.putExtra(getString(R.string.extra_term), term);
+        classesActivity.getTermLoader().pause();
         startActivity(intent);
     }
 
@@ -101,4 +102,12 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         idMap = new HashMap<>();
         nameMap = new HashMap<>();
     }
+
+    /*
+    Options:
+    1) Only load the data for the term currently being viewed; start loading data for other terms when the user moves to those fragments
+    2) Work on loading all terms when the app is on ClassesActivity; pause loading of terms when the app enters AssignmentsActivity
+    3) Work on loading terms until they are all loaded; make AssignmentsActivity wait to start its loading until all terms are loaded
+    4) Figure out how to let everything load at the same time and not break
+     */
 }

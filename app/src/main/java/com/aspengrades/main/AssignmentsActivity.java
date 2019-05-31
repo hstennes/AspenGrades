@@ -1,22 +1,16 @@
 package com.aspengrades.main;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.aspengrades.data.Assignment;
+import com.aspengrades.data.AspenTaskStatus;
 import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.ClassInfoListener;
 import com.aspengrades.data.Cookies;
@@ -25,7 +19,8 @@ import com.aspengrades.data.TermSelector;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import javax.xml.transform.Result;
+import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 
 public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener {
 
@@ -44,9 +39,9 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.extra_class_description)));
         id = intent.getStringExtra(getString(R.string.extra_class_id));
         token = intent.getStringExtra(getString(R.string.extra_token));
+        int term = intent.getIntExtra(getString(R.string.extra_term), 0);
         String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
         String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
-        int term = intent.getIntExtra(getString(R.string.extra_term), 0);
         cookies = Cookies.from(keys, values);
         new TermSelectorTask(this, term).execute(cookies);
     }
@@ -59,11 +54,11 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
     public void onClassInfoRead(ClassInfo classInfo) {
         ProgressBar progressBar = findViewById(R.id.progress_circular);
         progressBar.setVisibility(View.GONE);
-        int status  = classInfo.getStatus();
+        AspenTaskStatus status  = classInfo.getStatus();
 
-        if(status == ClassInfo.SESSION_EXPIRED)
+        if(status == SESSION_EXPIRED)
             AlertUtil.showSessionExpiredAlert(this);
-        else if(status == ClassInfo.ASPEN_UNAVAILABLE)
+        else if(status == ASPEN_UNAVAILABLE)
             findViewById(R.id.text_error).setVisibility(View.VISIBLE);
         else setupRecyclerView(classInfo);
     }

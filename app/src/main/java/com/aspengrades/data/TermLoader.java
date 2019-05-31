@@ -4,14 +4,18 @@ import android.util.Log;
 
 public class TermLoader implements ClassesListener {
 
-    private ClassesListener listener;
+    private ClassesListener classesListener;
     private Cookies cookies;
     private int[] loadingOrder;
     private int loadingIndex;
+    private boolean continueLoading;
+    private boolean done;
 
-    public TermLoader(ClassesListener listener, Cookies cookies){
-        this.listener = listener;
+    public TermLoader(ClassesListener classesListener, Cookies cookies){
+        this.classesListener = classesListener;
         this.cookies = cookies;
+        continueLoading = true;
+        done = false;
         loadingIndex = 0;
     }
 
@@ -23,10 +27,21 @@ public class TermLoader implements ClassesListener {
     @Override
     public void onClassesRead(ClassList classList) {
         Log.d("TermLoader", "Loaded term " + classList.getTerm());
-        listener.onClassesRead(classList);
+        if(classesListener != null) classesListener.onClassesRead(classList);
         loadingIndex++;
-        if(loadingIndex < loadingOrder.length)
+
+        if(loadingIndex >= loadingOrder.length) done = true;
+        else if(continueLoading)
             ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
+    }
+
+    public void pause(){
+        continueLoading = false;
+    }
+
+    public void resumeIfNecessary(){
+        continueLoading = true;
+        if(!done) ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
     }
 
     private int[] getLoadingOrder(int priorityTerm) {

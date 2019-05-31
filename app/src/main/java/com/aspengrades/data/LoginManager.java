@@ -8,13 +8,14 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
+import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.INVALID_CREDENTIALS;
+import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
+
 public class LoginManager {
 
     private static final String LOGIN_URL = "https://aspen.cps.edu/aspen/logon.do";
     private static final String LOGIN_FORM_EVENT = "930";
-    private static final int SUCCESSFUL = 1;
-    private static final int INVALID_CREDENTIALS = 2;
-    private static final int FAILED = 3;
 
     public static void attemptLogin(LoginListener listener, String username, String password){
         new LoginTask(listener).execute(username, password);
@@ -23,7 +24,7 @@ public class LoginManager {
     private static class LoginTask extends AsyncTask<String, Void, Cookies>{
 
         private LoginListener listener;
-        private int status;
+        private AspenTaskStatus status;
 
         private LoginTask(LoginListener listener){
             this.listener = listener;
@@ -58,7 +59,7 @@ public class LoginManager {
                 return new Cookies(loginForm.cookies());
             }catch (IOException e){
                 e.printStackTrace();
-                status = FAILED;
+                status = ASPEN_UNAVAILABLE;
             }
             return null;
         }
@@ -67,7 +68,7 @@ public class LoginManager {
         protected void onPostExecute(Cookies cookies){
             if(status == SUCCESSFUL) listener.onLoginSuccessful(cookies);
             else if(status == INVALID_CREDENTIALS) listener.onInvalidCredentials();
-            else if(status == FAILED) listener.onLoginFailed();
+            else if(status == ASPEN_UNAVAILABLE) listener.onLoginFailed();
         }
     }
 }

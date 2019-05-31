@@ -22,6 +22,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     private Cookies cookies;
     private ViewPager pager;
     private TermPagerAdapter adapter;
+    private TermLoader termLoader;
     private int favTerm;
 
     @Override
@@ -45,7 +46,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
             String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
             cookies = Cookies.from(keys, values);
-            new TermLoader(adapter, cookies).readAllTerms(favTerm);
+            termLoader = new TermLoader(adapter, cookies);
+            termLoader.readAllTerms(favTerm);
         }
         else{
             String username = intent.getStringExtra(getString(R.string.saved_username_key));
@@ -79,9 +81,16 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        if(termLoader != null) termLoader.resumeIfNecessary();
+    }
+
+    @Override
     public void onLoginSuccessful(Cookies cookies) {
         this.cookies = cookies;
-        new TermLoader(adapter, cookies).readAllTerms(favTerm);
+        termLoader = new TermLoader(adapter, cookies);
+        termLoader.readAllTerms(favTerm);
     }
 
     @Override
@@ -110,6 +119,10 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(getString(R.string.extra_main_activity_relaunch), true);
         startActivity(intent);
+    }
+
+    public TermLoader getTermLoader(){
+        return termLoader;
     }
 
     public Cookies getCookies(){

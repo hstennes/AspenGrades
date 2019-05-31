@@ -17,7 +17,6 @@ public class ClassList {
     public static final String[] TERM_CODES = new String[] {"current", "gtmQ10000000Q1", "gtmQ20000000Q2", "gtmQ30000000Q3", "gtmQ40000000Q4"};
     private static final int NUM_CLASS_ATTRIBUTES = 11;
 
-
     private ArrayList<SchoolClass> classes;
     private int term;
     private String token;

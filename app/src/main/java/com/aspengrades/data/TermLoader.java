@@ -26,7 +26,7 @@ public class TermLoader implements ClassesListener {
 
     @Override
     public void onClassesRead(ClassList classList) {
-        Log.d("TermLoader", "Loaded term " + classList.getTerm());
+        if(classList != null) Log.d("TermLoader", "Loaded term " + classList.getTerm());
         if(classesListener != null) classesListener.onClassesRead(classList);
         loadingIndex++;
 

@@ -19,6 +19,8 @@ import com.aspengrades.util.ColorUtil;
 
 import java.util.HashMap;
 
+import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
+
 public class TermFragment extends Fragment implements View.OnClickListener, ClassesListener {
 
     private ClassList classList;
@@ -38,9 +40,9 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             return view;
         }
         else {
-            view = inflater.inflate(R.layout.fragment_term, container, false);
             view.findViewById(R.id.progress_circular).setVisibility(View.GONE);
-            setupClassList();
+            if(classList.getStatus() == SUCCESSFUL) setupClassList();
+            else view.findViewById(R.id.text_error).setVisibility(View.VISIBLE);
             return view;
         }
     }
@@ -53,8 +55,11 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         if(view != null) {
             this.classList = classList;
             view.findViewById(R.id.progress_circular).setVisibility(View.GONE);
-            view.findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
-            setupClassList();
+            if(classList.getStatus() == SUCCESSFUL) {
+                view.findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
+                setupClassList();
+            }
+            else view.findViewById(R.id.text_error).setVisibility(View.VISIBLE);
         }
     }
 
@@ -102,12 +107,4 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         idMap = new HashMap<>();
         nameMap = new HashMap<>();
     }
-
-    /*
-    Options:
-    1) Only load the data for the term currently being viewed; start loading data for other terms when the user moves to those fragments
-    2) Work on loading all terms when the app is on ClassesActivity; pause loading of terms when the app enters AssignmentsActivity
-    3) Work on loading terms until they are all loaded; make AssignmentsActivity wait to start its loading until all terms are loaded
-    4) Figure out how to let everything load at the same time and not break
-     */
 }

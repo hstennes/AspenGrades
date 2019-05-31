@@ -1,12 +1,16 @@
 package com.aspengrades.data;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
 public class ClassList {
 
@@ -20,11 +24,13 @@ public class ClassList {
     private ArrayList<SchoolClass> classes;
     private int term;
     private String token;
+    private AspenTaskStatus status;
 
-    private ClassList(ArrayList<SchoolClass> classes, int term, String token){
+    private ClassList(ArrayList<SchoolClass> classes, int term, String token, AspenTaskStatus status){
         this.classes = classes;
         this.term = term;
         this.token = token;
+        this.status = status;
     }
 
     public static void readClasses(ClassesListener listener, Cookies cookies){
@@ -47,6 +53,10 @@ public class ClassList {
         return token;
     }
 
+    public AspenTaskStatus getStatus(){
+        return status;
+    }
+
     private static class ReadClassesTask extends AsyncTask<Cookies, Void, ClassList>{
 
         private ClassesListener listener;
@@ -67,17 +77,16 @@ public class ClassList {
             try{
                 doc = new TermSelector().selectTerm(cookies[0], term);
             }catch (IOException e){
-                e.printStackTrace();
-                return null;
+                Log.d("ClassList", "IOException reading info (" + e.getClass().getName() + ")");
+                return new ClassList(null, term, null, ASPEN_UNAVAILABLE);
             }
 
             ArrayList<SchoolClass> classes = new ArrayList<>();
             for(Element row : doc.getElementById("dataGrid").child(0).child(0).children()){
                 if(row.childNodeSize() >= NUM_CLASS_ATTRIBUTES && row.siblingIndex() != 0) classes.add(new SchoolClass(row));
             }
-
             String token = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]").attr("value");
-            return new ClassList(classes, term, token);
+            return new ClassList(classes, term, token, SUCCESSFUL);
         }
 
         @Override

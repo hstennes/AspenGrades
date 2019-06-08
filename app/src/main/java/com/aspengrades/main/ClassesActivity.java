@@ -87,6 +87,14 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
+
+    @Override
     public void onLoginSuccessful(Cookies cookies) {
         this.cookies = cookies;
         termLoader = new TermLoader(adapter, cookies);
@@ -128,7 +136,4 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     public Cookies getCookies(){
         return cookies;
     }
-
-    @Override
-    public void onBackPressed() {}
 }

@@ -38,7 +38,8 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        if(getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.toolbar_login);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.extra_class_description)));
         id = intent.getStringExtra(getString(R.string.extra_class_id));
         token = intent.getStringExtra(getString(R.string.extra_token));
         int term = intent.getIntExtra(getString(R.string.extra_term), 0);

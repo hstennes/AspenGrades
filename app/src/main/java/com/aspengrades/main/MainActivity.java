@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.toolbar_login);
+        if(getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.toolbar_login);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials_file_key), Context.MODE_PRIVATE);
         if(!sharedPreferences.contains(getString(R.string.saved_username_key)) ||
@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
             setupButtonListener();
         }
         else {
-            Log.d("MainActivity", "Previous credentials found, starting ClassesActivity");
-            String username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
-            String password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
             Intent intent = new Intent(this, ClassesActivity.class);
+            username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
+            password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
             intent.putExtra(getString(R.string.saved_username_key), username);
             intent.putExtra(getString(R.string.saved_password_key), password);
+            Log.d("MainActivity", "Previous credentials found, starting ClassesActivity");
             startActivity(intent);
         }
     }
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onLoginFailed(){
-        loginUnsuccessful(getString(R.string.text_aspen_error));
+        loginUnsuccessful(getString(R.string.text_network_error));
     }
 
     private void loginUnsuccessful(String text){

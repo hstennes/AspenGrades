@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.IOException;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
@@ -68,6 +69,9 @@ public class ClassInfo {
                 if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
                     return new ClassInfo(null, null, SESSION_EXPIRED);
                 return new ClassInfo(null, null, ASPEN_UNAVAILABLE);
+            }catch (IndexOutOfBoundsException e){
+                Log.d("ClassInfo", "IndexOutOfBoundsException reading info (parsing error)");
+                return new ClassInfo(null, null, PARSING_ERROR);
             }
         }
 

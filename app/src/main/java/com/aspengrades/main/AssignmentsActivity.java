@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.aspengrades.data.AspenTaskStatus;
 import com.aspengrades.data.ClassInfo;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 
 public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener {
@@ -36,7 +38,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.extra_class_description)));
+        if(getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.toolbar_login);
         id = intent.getStringExtra(getString(R.string.extra_class_id));
         token = intent.getStringExtra(getString(R.string.extra_token));
         int term = intent.getIntExtra(getString(R.string.extra_term), 0);
@@ -59,7 +61,9 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         if(status == SESSION_EXPIRED)
             AlertUtil.showSessionExpiredAlert(this);
         else if(status == ASPEN_UNAVAILABLE)
-            findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+            showErrorMessage(getString(R.string.text_network_error));
+        else if(status == PARSING_ERROR)
+            showErrorMessage(getString(R.string.text_parsing_error));
         else setupRecyclerView(classInfo);
     }
 
@@ -69,6 +73,12 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         CategoryAdapter adapter = new CategoryAdapter(classInfo, this);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void showErrorMessage(String text){
+        TextView textError = findViewById(R.id.text_error);
+        textError.setText(text);
+        findViewById(R.id.text_error).setVisibility(View.VISIBLE);
     }
 
     private static class TermSelectorTask extends AsyncTask<Cookies, Void, Void>{

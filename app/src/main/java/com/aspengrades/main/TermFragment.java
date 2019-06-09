@@ -19,6 +19,8 @@ import com.aspengrades.util.ColorUtil;
 
 import java.util.HashMap;
 
+import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
 public class TermFragment extends Fragment implements View.OnClickListener, ClassesListener {
@@ -42,7 +44,10 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         else {
             view.findViewById(R.id.progress_circular).setVisibility(View.GONE);
             if(classList.getStatus() == SUCCESSFUL) setupClassList();
-            else view.findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+            else if(classList.getStatus() == ASPEN_UNAVAILABLE)
+                showErrorMessage(view, getString(R.string.text_network_error));
+            else if(classList.getStatus() == PARSING_ERROR)
+                showErrorMessage(view, getString(R.string.text_parsing_error));
             return view;
         }
     }
@@ -59,7 +64,10 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
                 view.findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
                 setupClassList();
             }
-            else view.findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+            else if(classList.getStatus() == ASPEN_UNAVAILABLE)
+                showErrorMessage(view, getString(R.string.text_network_error));
+            else if(classList.getStatus() == PARSING_ERROR)
+                showErrorMessage(view, getString(R.string.text_parsing_error));
         }
     }
 
@@ -98,6 +106,12 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             classButton.getBackground().setColorFilter(ColorUtil.colorFromGrade(getContext(), gradeVal), PorterDuff.Mode.SRC);
             classesLayout.addView(classButton);
         }
+    }
+
+    private void showErrorMessage(View v, String text){
+        TextView textError = v.findViewById(R.id.text_error);
+        textError.setText(text);
+        textError.setVisibility(View.VISIBLE);
     }
 
     public void giveParams(ClassList classList, ClassesActivity classesActivity){

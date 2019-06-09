@@ -79,7 +79,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
     private void showErrorMessage(String text){
         TextView textError = findViewById(R.id.text_error);
         textError.setText(text);
-        findViewById(R.id.text_error).setVisibility(View.VISIBLE);
+        textError.setVisibility(View.VISIBLE);
     }
 
     private static class TermSelectorTask extends AsyncTask<Cookies, Void, Void>{

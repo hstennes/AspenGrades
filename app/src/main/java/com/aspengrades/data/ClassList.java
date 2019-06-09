@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
 public class ClassList {
@@ -79,12 +80,18 @@ public class ClassList {
                 return new ClassList(null, term, null, ASPEN_UNAVAILABLE);
             }
 
-            ArrayList<SchoolClass> classes = new ArrayList<>();
-            for(Element row : doc.getElementById("dataGrid").child(0).child(0).children()){
-                if(row.childNodeSize() >= NUM_CLASS_ATTRIBUTES && row.siblingIndex() != 0) classes.add(new SchoolClass(row));
+            try {
+                ArrayList<SchoolClass> classes = new ArrayList<>();
+                for (Element row : doc.getElementById("dataGrid").child(0).child(0).children()) {
+                    if (row.childNodeSize() >= NUM_CLASS_ATTRIBUTES && row.siblingIndex() != 0)
+                        classes.add(new SchoolClass(row));
+                }
+                String token = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]").attr("value");
+                return new ClassList(classes, term, token, SUCCESSFUL);
             }
-            String token = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]").attr("value");
-            return new ClassList(classes, term, token, SUCCESSFUL);
+            catch(IndexOutOfBoundsException | NumberFormatException e){
+                return new ClassList(null, term, null, PARSING_ERROR);
+            }
         }
 
         @Override

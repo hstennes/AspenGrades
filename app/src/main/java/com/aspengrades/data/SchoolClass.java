@@ -1,7 +1,6 @@
 package com.aspengrades.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.jsoup.nodes.Element;
 
@@ -23,7 +22,6 @@ public class SchoolClass {
         try {
             termGrade = Float.parseFloat(gradeString);
         } catch (NumberFormatException e){
-            Log.d("ClassList", "Class grade blank");
             termGrade = BLANK_GRADE;
         }
 

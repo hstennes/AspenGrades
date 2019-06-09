@@ -1,7 +1,6 @@
 package com.aspengrades.data;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -77,7 +76,6 @@ public class ClassList {
             try{
                 doc = new TermSelector().selectTerm(cookies[0], term);
             }catch (IOException e){
-                Log.d("ClassList", "IOException reading info (" + e.getClass().getName() + ")");
                 return new ClassList(null, term, null, ASPEN_UNAVAILABLE);
             }
 

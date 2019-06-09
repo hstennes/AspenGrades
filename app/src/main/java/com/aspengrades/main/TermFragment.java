@@ -65,7 +65,6 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
 
     @Override
     public void onClick(View v) {
-        System.out.println("Class button pressed");
         Intent intent = new Intent(classesActivity, AssignmentsActivity.class);
         intent.putExtra(getString(R.string.extra_class_id), idMap.get(v));
         intent.putExtra(getString(R.string.extra_class_description), nameMap.get(v));

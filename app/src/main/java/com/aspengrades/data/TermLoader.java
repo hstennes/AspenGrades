@@ -1,7 +1,5 @@
 package com.aspengrades.data;
 
-import android.util.Log;
-
 public class TermLoader implements ClassesListener {
 
     private ClassesListener classesListener;
@@ -26,7 +24,6 @@ public class TermLoader implements ClassesListener {
 
     @Override
     public void onClassesRead(ClassList classList) {
-        if(classList != null) Log.d("TermLoader", "Loaded term " + classList.getTerm());
         if(classesListener != null) classesListener.onClassesRead(classList);
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;

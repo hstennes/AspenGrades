@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials_file_key), Context.MODE_PRIVATE);
         if(!sharedPreferences.contains(getString(R.string.saved_username_key)) ||
                 getIntent().hasExtra(getString(R.string.extra_main_activity_relaunch))) {
-            Log.d("MainActivity", "No saved credentials found");
             setupButtonListener();
         }
         else {
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
             password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
             intent.putExtra(getString(R.string.saved_username_key), username);
             intent.putExtra(getString(R.string.saved_password_key), password);
-            Log.d("MainActivity", "Previous credentials found, starting ClassesActivity");
             startActivity(intent);
         }
     }

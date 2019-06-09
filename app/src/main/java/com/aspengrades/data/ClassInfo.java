@@ -1,7 +1,6 @@
 package com.aspengrades.data;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -65,12 +64,10 @@ public class ClassInfo {
                 AssignmentList aList = new AssignmentList().readAssignments(params[0].cookies, params[0].classesToken);
                 return new ClassInfo(cList, aList, SUCCESSFUL);
             }catch (IOException e){
-                Log.d("ClassInfo", "IOException reading info (" + e.getClass().getName() + ")");
                 if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
                     return new ClassInfo(null, null, SESSION_EXPIRED);
                 return new ClassInfo(null, null, ASPEN_UNAVAILABLE);
             }catch (IndexOutOfBoundsException e){
-                Log.d("ClassInfo", "IndexOutOfBoundsException reading info (parsing error)");
                 return new ClassInfo(null, null, PARSING_ERROR);
             }
         }

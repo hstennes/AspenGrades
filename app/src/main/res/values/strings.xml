@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GradeLeaf</string>
+    <string name="app_name">GradeLeaf Test</string>
     <string name="toolbar_login">Login</string>
     <string name="text_invalid_credentials">Invalid username or password</string>
     <string name="text_network_error">Aspen temporarily unavailable</string>

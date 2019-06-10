@@ -19,11 +19,24 @@ public class AssignmentList extends ArrayList<Assignment> {
     public AssignmentList readAssignments(Cookies cookies, String gradeTermOid, String classesToken) throws IOException{
         Document doc;
         doc = getDoc(cookies, gradeTermOid, classesToken);
+
         Element tbody = doc.getElementById("dataGrid").child(0).child(0);
-        for (int i = 1; i < tbody.childNodeSize() / 2 - 1; i++) {
-            add(new Assignment(tbody.children().get(i)));
+        int[] indexes = getInfoIndexes(tbody.child(0));
+        for (int i = 1; i < tbody.children().size() - 1; i++) {
+            add(new Assignment(tbody.child(i), indexes[0], indexes[1], indexes[2]));
         }
         return this;
+    }
+
+    private int[] getInfoIndexes(Element firstRow){
+        int[] indexes = new int[] {-1, -1, -1};
+        for(int i = 0; i < firstRow.children().size(); i++){
+            String text = firstRow.child(i).text();
+            if(text.equals("AssignmentName")) indexes[0] = i;
+            else if(text.equals("Category > Desc")) indexes[1] = i;
+            else if(text.equals("Score")) indexes[2] = i;
+        }
+        return indexes;
     }
 
     private Document getDoc(Cookies cookies, String gradeTermOid, String token) throws IOException {

@@ -82,16 +82,28 @@ public class ClassList {
 
             try {
                 ArrayList<SchoolClass> classes = new ArrayList<>();
-                for (Element row : doc.getElementById("dataGrid").child(0).child(0).children()) {
-                    if (row.childNodeSize() >= NUM_CLASS_ATTRIBUTES && row.siblingIndex() != 0)
-                        classes.add(new SchoolClass(row));
+                Element tbody = doc.getElementById("dataGrid").child(0).child(0);
+                int[] indexes = getInfoIndexes(tbody.child(0));
+                for(int i = 1; i < tbody.children().size() - 1; i++){
+                    classes.add(new SchoolClass(tbody.child(i), indexes[0], indexes[1]));
                 }
+
                 String token = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]").attr("value");
                 return new ClassList(classes, term, token, SUCCESSFUL);
             }
             catch(IndexOutOfBoundsException | NumberFormatException e){
                 return new ClassList(null, term, null, PARSING_ERROR);
             }
+        }
+
+        private int[] getInfoIndexes(Element firstRow){
+            int[] indexes = new int[] {-1, -1};
+            for(int i = 0; i < firstRow.children().size(); i++){
+                String text = firstRow.child(i).text();
+                if(text.equals("Description")) indexes[0] = i;
+                else if(text.equals("Term Performance")) indexes[1] = i;
+            }
+            return indexes;
         }
 
         @Override

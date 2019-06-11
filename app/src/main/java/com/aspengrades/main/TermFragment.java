@@ -89,7 +89,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         TextView textTerm = view.findViewById(R.id.text_term);
         textTerm.setText(getString(R.string.text_term, Integer.toString(classList.getTerm())));
 
-        for(SchoolClass schoolClass : classList.getClasses()){
+        for(SchoolClass schoolClass : classList){
             View classButton = inflater.inflate(R.layout.class_button, classesLayout, false);
             idMap.put(classButton, schoolClass.getId());
             nameMap.put(classButton, schoolClass.getDescription());

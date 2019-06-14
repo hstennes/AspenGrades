@@ -23,8 +23,9 @@ public class AssignmentList extends ArrayList<Assignment> {
     private static final String ASSIGNMENT_FORM_EVENT = "2210";
 
     /**
-     * Fills this AssignmentList with assignments from the selected class and all terms applicable to that class. This may not include
-     * all assignments in the term depending on how many assignments are set to be shown in Aspen's settings
+     * Fills this AssignmentList with assignments from the selected class and all terms applicable to that class. his may not include
+     * all assignments in the term depending on how many assignments are set to be shown in Aspen's settings. This method should only be
+     * called from within and AsyncTask
      * @param cookies The cookies from LoginManager
      * @param classesToken The token from ClassList
      * @return This AssignmentList object
@@ -35,8 +36,9 @@ public class AssignmentList extends ArrayList<Assignment> {
     }
 
     /**
-     * Fills this AssignmentList with assignments from the selected class and given term.  This may not include all assignments in the
-     * term depending on how many assignments are set to be shown in Aspen's settings
+     * Fills this AssignmentList with assignments from the selected class and given term. This may not include all assignments in the
+     * term depending on how many assignments are set to be shown in Aspen's settings. This method should only be called from within an
+     * AsyncTask.
      * @param cookies The cookies from LoginManager
      * @param gradeTermOid The string representing the desired grade term, as defined by ClassList.TERM_CODES
      * @param classesToken The token from ClassList

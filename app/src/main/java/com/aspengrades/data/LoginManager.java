@@ -12,20 +12,50 @@ import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.INVALID_CREDENTIALS;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
+/**
+ * A class that uses the given credentials to log into Aspen
+ */
 public class LoginManager {
 
+    /**
+     * The URl of the login page in CPS Aspen
+     */
     private static final String LOGIN_URL = "https://aspen.cps.edu/aspen/logon.do";
+
+    /**
+     * The userEvent that must be submitted with the login form
+     */
     private static final String LOGIN_FORM_EVENT = "930";
 
+    /**
+     * Attempts to login using the given credentials
+     * @param listener The listener to notify when the task is complete
+     * @param username The username given by the user
+     * @param password The password given by the user
+     */
     public static void attemptLogin(LoginListener listener, String username, String password){
         new LoginTask(listener).execute(username, password);
     }
 
+    /**
+     * An AsyncTask for logging into Aspen
+     */
     private static class LoginTask extends AsyncTask<String, Void, Cookies>{
 
+        /**
+         * The listener to notify when the task is complete
+         */
         private LoginListener listener;
+
+        /**
+         * The result of attempting to login
+         */
         private AspenTaskStatus status;
 
+        /**
+         * Creates a new LoginTask
+         * @param listener the listener
+         */
         private LoginTask(LoginListener listener){
             this.listener = listener;
         }

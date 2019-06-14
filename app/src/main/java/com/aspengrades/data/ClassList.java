@@ -12,6 +12,9 @@ import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
+/**
+ * A list that contains basic info about each class in specific term
+ */
 public class ClassList extends ArrayList<SchoolClass> {
 
     /**
@@ -39,20 +42,39 @@ public class ClassList extends ArrayList<SchoolClass> {
      */
     public static final String[] TERM_CODES = new String[] {"current", "gtmQ10000000Q1", "gtmQ20000000Q2", "gtmQ30000000Q3", "gtmQ40000000Q4"};
 
+    /**
+     * The term that was selected on the classes page
+     */
     private int term;
+
+    /**
+     * The token read from the classes page
+     */
     private String token;
+
+    /**
+     * The result of the attempt to read the classes
+     */
     private AspenTaskStatus status;
 
+    /**
+     * Creates a new ClassList object
+     * @param term The term the classes were read from
+     * @param token The token read from the classes page
+     * @param status The result of attempting to read data
+     */
     private ClassList(int term, String token, AspenTaskStatus status){
         this.term = term;
         this.token = token;
         this.status = status;
     }
 
-    public static void readClasses(ClassesListener listener, Cookies cookies){
-        new ReadClassesTask(listener).execute(cookies);
-    }
-
+    /**
+     * Reads the classes for the given term
+     * @param listener The listener to notify when the task is complete
+     * @param term The term to read classes from
+     * @param cookies The cookies from LoginManager
+     */
     public static void readClasses(ClassesListener listener, int term, Cookies cookies){
         new ReadClassesTask(listener, term).execute(cookies);
     }
@@ -69,15 +91,26 @@ public class ClassList extends ArrayList<SchoolClass> {
         return status;
     }
 
+    /**
+     * An AsyncTask for reading data from Aspen
+     */
     private static class ReadClassesTask extends AsyncTask<Cookies, Void, ClassList>{
 
+        /**
+         * The listener to notify when the task is complete
+         */
         private ClassesListener listener;
+
+        /**
+         * The term to read classes from
+         */
         private int term = 0;
 
-        private ReadClassesTask(ClassesListener listener){
-            this.listener = listener;
-        }
-
+        /**
+         * Creates a new ReadClassesTask
+         * @param listener The listener
+         * @param term The term
+         */
         private ReadClassesTask(ClassesListener listener, int term){
             this.listener = listener;
             this.term = term;
@@ -107,6 +140,12 @@ public class ClassList extends ArrayList<SchoolClass> {
             }
         }
 
+        /**
+         * Determines the indexes in the classes table for each piece of information. The first value is the index for the
+         * description and the second for the grade.
+         * @param firstRow The first row of the table, which contains the titles for each column
+         * @return The indexes (column numbers) for each piece of important information
+         */
         private int[] getInfoIndexes(Element firstRow){
             int[] indexes = new int[] {-1, -1};
             for(int i = 0; i < firstRow.children().size(); i++){

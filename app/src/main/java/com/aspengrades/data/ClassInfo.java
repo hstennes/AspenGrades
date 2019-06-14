@@ -99,7 +99,7 @@ public class ClassInfo {
 
         /**
          * Creates a ClassInfoTask that will notify the given listener when it is complete
-         * @param listener
+         * @param listener The ClassInfoListener to notify
          */
         public ClassInfoTask(ClassInfoListener listener){
             this.listener = listener;

@@ -28,7 +28,7 @@ public class CategoryList extends ArrayList<Category> {
     private static final int ENDING_ROWS = 2;
 
     /**
-     * Returns a CategoryList based on the currently selected class
+     * Returns a CategoryList based on the currently selected class. This method should only be called from inside and AsyncTask.
      * @param cookies The cookies from LoginManager
      * @return The list of categories for the given class
      * @throws IOException If Aspen could not be reached for any reason

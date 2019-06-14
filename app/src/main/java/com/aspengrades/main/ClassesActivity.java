@@ -45,7 +45,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         if(loggedIn) {
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
             String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
-            cookies = Cookies.from(keys, values);
+            cookies = new Cookies(keys, values);
             termLoader = new TermLoader(adapter, cookies);
             termLoader.readAllTerms(favTerm);
         }

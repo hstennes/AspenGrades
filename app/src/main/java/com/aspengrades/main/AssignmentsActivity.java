@@ -36,7 +36,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         int term = intent.getIntExtra(getString(R.string.extra_term), 0);
         String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
         String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
-        Cookies cookies = Cookies.from(keys, values);
+        Cookies cookies = new Cookies(keys, values);
         ClassInfo.readClassInfo(this, term, id, token, cookies);
     }
 

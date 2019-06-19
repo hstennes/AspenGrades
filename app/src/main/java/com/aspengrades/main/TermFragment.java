@@ -18,6 +18,7 @@ import com.aspengrades.data.SchoolClass;
 import com.aspengrades.util.ColorUtil;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
@@ -100,7 +101,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             description.setText(schoolClass.getDescription());
             float gradeVal = schoolClass.getTermGrade();
             if(gradeVal != -1) {
-                grade.setText(Float.toString(gradeVal));
+                grade.setText(String.format(Locale.getDefault(), "%.2f", gradeVal));
                 classButton.setOnClickListener(this);
             }
             classButton.getBackground().setColorFilter(ColorUtil.colorFromGrade(getContext(), gradeVal), PorterDuff.Mode.SRC);

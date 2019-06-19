@@ -7,6 +7,8 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.aspengrades.data.LoginManager.TIMEOUT;
+
 /**
  * An ArrayList of Categories that can read category data from Aspen
  */
@@ -50,6 +52,6 @@ public class CategoryList extends ArrayList<Category> {
      * @throws IOException If Aspen could not be reached for any reason
      */
     private Document getDoc(Cookies cookies) throws IOException {
-        return Jsoup.connect(DETAILS_URL).timeout(10000).cookies(cookies.getCookieMap()).get();
+        return Jsoup.connect(DETAILS_URL).timeout(TIMEOUT).cookies(cookies.getCookieMap()).get();
     }
 }

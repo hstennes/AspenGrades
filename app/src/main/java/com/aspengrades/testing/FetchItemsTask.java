@@ -8,6 +8,8 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
+import static com.aspengrades.data.LoginManager.TIMEOUT;
+
 public class FetchItemsTask extends AsyncTask<Void, Void, String> {
 
     private final String loginUrl = "https://aspen.cps.edu/aspen/logon.do";
@@ -25,7 +27,7 @@ public class FetchItemsTask extends AsyncTask<Void, Void, String> {
         try{
             Connection.Response loginForm = Jsoup.connect(loginUrl)
                     .method(Connection.Method.GET)
-                    .timeout(10000)
+                    .timeout(TIMEOUT)
                     .execute();
 
             Document doc = loginForm.parse();
@@ -42,7 +44,7 @@ public class FetchItemsTask extends AsyncTask<Void, Void, String> {
                     .post();
 
             doc = Jsoup.connect(classesUrl)
-                    .timeout(10000)
+                    .timeout(TIMEOUT)
                     .cookies(loginForm.cookies())
                     .get();
 
@@ -86,7 +88,7 @@ public class FetchItemsTask extends AsyncTask<Void, Void, String> {
 
             System.out.println("DETAILS");
             doc = Jsoup.connect(detailsUrl)
-                    .timeout(10000)
+                    .timeout(TIMEOUT)
                     .cookies(loginForm.cookies())
                     .get();
             System.out.println(doc.html());

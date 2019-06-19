@@ -5,6 +5,8 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
+import static com.aspengrades.data.LoginManager.TIMEOUT;
+
 /**
  * A class for selecting a term on the classes page
  */
@@ -18,7 +20,7 @@ public class TermSelector {
      * @throws IOException If Aspen could not be reached for any reason
      */
     public Document selectTerm(Cookies cookies, int term) throws IOException {
-        Document doc = Jsoup.connect(ClassList.CLASSES_URL).timeout(10000).cookies(cookies.getCookieMap()).get();
+        Document doc = Jsoup.connect(ClassList.CLASSES_URL).timeout(TIMEOUT).cookies(cookies.getCookieMap()).get();
         if(term != 0){
             return Jsoup.connect(ClassList.CLASSES_URL)
                     .data("org.apache.struts.taglib.html.TOKEN", getToken(doc))

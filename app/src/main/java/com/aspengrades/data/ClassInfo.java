@@ -114,10 +114,12 @@ public class ClassInfo {
                 AssignmentList aList = new AssignmentList().readAssignments(params[0].cookies, params[0].classesToken);
                 return new ClassInfo(cList, aList, SUCCESSFUL);
             }catch (IOException e){
+                e.printStackTrace();
                 if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
                     return new ClassInfo(null, null, SESSION_EXPIRED);
                 return new ClassInfo(null, null, ASPEN_UNAVAILABLE);
             }catch (IndexOutOfBoundsException | NumberFormatException e){
+                e.printStackTrace();
                 return new ClassInfo(null, null, PARSING_ERROR);
             }
         }

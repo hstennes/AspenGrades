@@ -23,6 +23,11 @@ public class LoginManager {
     private static final String LOGIN_URL = "https://aspen.cps.edu/aspen/logon.do";
 
     /**
+     * The length of time the app will wait for a response when attempting to connect to a page
+     */
+    public static int TIMEOUT = 15000;
+
+    /**
      * The userEvent that must be submitted with the login form
      */
     private static final String LOGIN_FORM_EVENT = "930";
@@ -67,7 +72,7 @@ public class LoginManager {
             try {
                 Connection.Response loginForm = Jsoup.connect(LOGIN_URL)
                         .method(Connection.Method.GET)
-                        .timeout(10000)
+                        .timeout(TIMEOUT)
                         .execute();
                 Document doc = loginForm.parse();
                 String loginToken = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]")

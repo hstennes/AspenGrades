@@ -104,7 +104,7 @@ public class ClassList extends ArrayList<SchoolClass> {
         /**
          * The term to read classes from
          */
-        private int term = 0;
+        private int term;
 
         /**
          * Creates a new ReadClassesTask

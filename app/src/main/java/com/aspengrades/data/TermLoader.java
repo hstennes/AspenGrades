@@ -51,7 +51,7 @@ public class TermLoader implements ClassesListener {
     /**
      * Reads all terms, starting with the given term and following with the closest terms to the given term. For example, if term 3 is
      * given, the terms will be loaded in the order 3, 2, 4, 1. If term 4 is given, the terms will be loaded in the order 4, 3, 2, 1.
-     * @param priorityTerm
+     * @param priorityTerm The term that will be loaded first
      */
     public void readAllTerms(int priorityTerm){
         loadingOrder = getLoadingOrder(priorityTerm);

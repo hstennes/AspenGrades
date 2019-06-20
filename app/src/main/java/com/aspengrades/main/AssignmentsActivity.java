@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +23,8 @@ import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 
 public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener {
+
+    private CategoryAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -41,6 +46,22 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_assignments, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_logout) {
+            if(adapter != null) adapter.toggleViewType();
+            return true;
+        }
+        else return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClassInfoRead(ClassInfo classInfo) {
         ProgressBar progressBar = findViewById(R.id.progress_circular);
         progressBar.setVisibility(View.GONE);
@@ -59,7 +80,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        CategoryAdapter adapter = new CategoryAdapter(classInfo, this);
+        adapter = new CategoryAdapter(classInfo, this);
         recyclerView.setAdapter(adapter);
     }
 

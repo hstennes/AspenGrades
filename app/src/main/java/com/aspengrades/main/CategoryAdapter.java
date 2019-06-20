@@ -22,6 +22,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private ClassInfo classInfo;
     private Context context;
 
+    private boolean percentMode = false;
+
     public CategoryAdapter(ClassInfo classInfo, Context context){
         this.classInfo = classInfo;
         this.context = context;
@@ -52,7 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             TextView textAssignment = assignmentView.findViewById(R.id.text_assignment);
             textAssignment.setText(assignment.getName());
             TextView textGrade = assignmentView.findViewById(R.id.text_assignment_grade);
-            textGrade.setText(assignment.getScore().split(" ")[0]);
+            textGrade.setText(getGradeText(assignment.getScore()));
             holder.layoutAssignments.addView(assignmentView);
         }
     }
@@ -60,6 +62,27 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public int getItemCount() {
         return classInfo.getCategoryList().size();
+    }
+
+    public void toggleViewType(){
+        percentMode = !percentMode;
+        notifyDataSetChanged();
+    }
+
+    private String getGradeText(String scoreText){
+        if(percentMode) return scoreText.split(" ")[0];
+        else {
+            String[] split = scoreText.split(" ");
+            int slashIndex = -1;
+            for (int x = 0; x < split.length; x++) {
+                if (split[x].equals("/")) {
+                    slashIndex = x;
+                    break;
+                }
+            }
+            if (slashIndex == -1) return split[0];
+            else return split[slashIndex - 1] + " " + split[slashIndex] + " " + split[slashIndex + 1];
+        }
     }
 
     class CategoryHolder extends RecyclerView.ViewHolder {

@@ -109,8 +109,7 @@ public class ClassInfo {
         protected ClassInfo doInBackground(TaskParams... params) {
             try {
                 new TermSelector().selectTerm(params[0].cookies, params[0].term);
-                new ClassSelector().selectClass(params[0]);
-                CategoryList cList = new CategoryList().readCategories(params[0].cookies);
+                CategoryList cList = new CategoryList().readCategories(params[0].cookies, params[0].classId, params[0].classesToken);
                 AssignmentList aList = new AssignmentList().readAssignments(params[0].cookies, params[0].classesToken);
                 return new ClassInfo(cList, aList, SUCCESSFUL);
             }catch (IOException e){

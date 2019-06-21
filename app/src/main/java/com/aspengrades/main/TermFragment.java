@@ -33,11 +33,13 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
     private ClassesActivity classesActivity;
     private View view;
     private int term;
+    private boolean created = false;
 
     @Override
     public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_term, container, false);
         this.inflater = inflater;
+        created = true;
         if(classList == null) {
             view.findViewById(R.id.scroll_view).setVisibility(View.GONE);
             return view;
@@ -58,7 +60,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
 
     @Override
     public void onClassesRead(ClassList classList) {
-        if(view != null) {
+        if(view != null && created) {
             this.classList = classList;
             view.findViewById(R.id.progress_circular).setVisibility(View.GONE);
             if(classList.getStatus() == SUCCESSFUL) {

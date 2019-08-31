@@ -12,4 +12,5 @@
     <color name="colorD">#e09a86</color>
     <color name="colorF">#f95252</color>
     <color name="colorN">#999999</color>
+    <color name="colorStatus">#777777</color>
 </resources>

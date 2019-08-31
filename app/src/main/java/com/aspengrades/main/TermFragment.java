@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.NO_DATA;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
@@ -48,9 +50,11 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             view.findViewById(R.id.progress_circular).setVisibility(View.GONE);
             if(classList.getStatus() == SUCCESSFUL) setupClassList();
             else if(classList.getStatus() == ASPEN_UNAVAILABLE)
-                showErrorMessage(view, getString(R.string.text_network_error));
+                showStatusMessage(view, true, getString(R.string.text_network_error));
             else if(classList.getStatus() == PARSING_ERROR)
-                showErrorMessage(view, getString(R.string.text_parsing_error));
+                showStatusMessage(view, true, getString(R.string.text_parsing_error));
+            else if(classList.getStatus() == NO_DATA)
+                showStatusMessage(view, false, getString(R.string.text_no_classes));
             return view;
         }
     }
@@ -68,9 +72,11 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
                 setupClassList();
             }
             else if(classList.getStatus() == ASPEN_UNAVAILABLE)
-                showErrorMessage(view, getString(R.string.text_network_error));
+                showStatusMessage(view, true, getString(R.string.text_network_error));
             else if(classList.getStatus() == PARSING_ERROR)
-                showErrorMessage(view, getString(R.string.text_parsing_error));
+                showStatusMessage(view, true, getString(R.string.text_parsing_error));
+            else if(classList.getStatus() == NO_DATA)
+                showStatusMessage(view, false, getString(R.string.text_no_classes));
         }
     }
 
@@ -111,10 +117,13 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         }
     }
 
-    private void showErrorMessage(View v, String text){
-        TextView textError = v.findViewById(R.id.text_error);
-        textError.setText(text);
-        textError.setVisibility(View.VISIBLE);
+    private void showStatusMessage(View v, boolean isError, String text){
+        TextView textStatus = v.findViewById(R.id.text_status);
+        textStatus.setTextColor(ContextCompat.getColor(v.getContext(),
+                isError ? R.color.colorError: R.color.colorStatus));
+        textStatus.setText(text);
+        textStatus.setVisibility(View.VISIBLE);
+        System.out.println(textStatus.getTextSize());
     }
 
     public void giveParams(ClassList classList, ClassesActivity classesActivity){

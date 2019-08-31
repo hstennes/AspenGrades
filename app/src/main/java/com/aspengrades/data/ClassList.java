@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
+import static com.aspengrades.data.AspenTaskStatus.NO_DATA;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
@@ -133,6 +134,7 @@ public class ClassList extends ArrayList<SchoolClass> {
                 for(int i = 1; i < tbody.children().size() - 1; i++){
                     classes.add(new SchoolClass(tbody.child(i), indexes[0], indexes[1]));
                 }
+                if(classes.size() == 0) classes.status = NO_DATA;
                 return classes;
             }
             catch(IndexOutOfBoundsException | NumberFormatException e){

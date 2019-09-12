@@ -77,7 +77,19 @@ public class ClassList extends ArrayList<SchoolClass> {
      * @param cookies The cookies from LoginManager
      */
     public static void readClasses(ClassesListener listener, int term, Cookies cookies){
-        new ReadClassesTask(listener, term).execute(cookies);
+        new ReadClassesTask(listener, term, null).execute(cookies);
+    }
+
+    /**
+     * Reads the classes for the given term and student OID. This method need only be used instead of readClasses(ClassesListener, int,
+     * Cookies) when the app is logged into a parent account and selecting a specific student.
+     * @param listener The listener to notify when the task is complete
+     * @param term The term to read classes from
+     * @param studentOid The student OID
+     * @param cookies The cookies from LoginManager
+     */
+    public static void readClasses(ClassesListener listener, int term, String studentOid, Cookies cookies){
+        new ReadClassesTask(listener, term, studentOid).execute(cookies);
     }
 
     public int getTerm(){
@@ -108,20 +120,26 @@ public class ClassList extends ArrayList<SchoolClass> {
         private int term;
 
         /**
+         * The student OID (may be set to null)
+         */
+        private String studentOid;
+
+        /**
          * Creates a new ReadClassesTask
          * @param listener The listener
          * @param term The term
          */
-        private ReadClassesTask(ClassesListener listener, int term){
+        private ReadClassesTask(ClassesListener listener, int term, String studentOid){
             this.listener = listener;
             this.term = term;
+            this.studentOid = studentOid;
         }
 
         @Override
         protected final ClassList doInBackground(Cookies... cookies) {
             Document doc;
             try{
-                doc = new TermSelector().selectTerm(cookies[0], term);
+                doc = new TermSelector().selectTerm(cookies[0], term, studentOid);
             }catch (IOException e){
                 return new ClassList(term, null, ASPEN_UNAVAILABLE);
             }

@@ -17,6 +17,7 @@ import com.aspengrades.data.AspenTaskStatus;
 import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.ClassInfoListener;
 import com.aspengrades.data.Cookies;
+import com.aspengrades.util.AlertUtil;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
@@ -54,7 +55,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_logout) {
+        if(item.getItemId() == R.id.action_toggle) {
             if(adapter != null) adapter.toggleViewType();
             return true;
         }

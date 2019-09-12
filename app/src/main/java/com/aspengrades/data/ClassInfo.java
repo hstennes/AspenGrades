@@ -108,7 +108,7 @@ public class ClassInfo {
         @Override
         protected ClassInfo doInBackground(TaskParams... params) {
             try {
-                new TermSelector().selectTerm(params[0].cookies, params[0].term);
+                new TermSelector().selectTerm(params[0].cookies, params[0].term, null);
                 CategoryList cList = new CategoryList().readCategories(params[0].cookies, params[0].classId, params[0].classesToken);
                 AssignmentList aList = new AssignmentList().readAssignments(params[0].cookies, params[0].classesToken);
                 return new ClassInfo(cList, aList, SUCCESSFUL);

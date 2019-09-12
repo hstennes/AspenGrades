@@ -1,4 +1,4 @@
-package com.aspengrades.main;
+package com.aspengrades.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
+
+import com.aspengrades.main.ClassesActivity;
+import com.aspengrades.main.R;
 
 public class AlertUtil {
 

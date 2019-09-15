@@ -41,6 +41,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         pager.setCurrentItem(favTerm - 1);
 
         Intent intent = getIntent();
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.saved_name_key)));
         boolean loggedIn = intent.hasExtra(getString(R.string.extra_cookie_keys));
         if(loggedIn) {
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
@@ -95,7 +97,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     }
 
     @Override
-    public void onLoginSuccessful(Cookies cookies, boolean isParentAccount) {
+    public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount) {
         this.cookies = cookies;
         termLoader = new TermLoader(adapter, cookies);
         termLoader.readAllTerms(favTerm);

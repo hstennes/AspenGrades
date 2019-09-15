@@ -16,13 +16,13 @@ import com.aspengrades.data.Cookies;
 import com.aspengrades.data.LoginListener;
 import com.aspengrades.data.LoginManager;
 
-
 public class MainActivity extends AppCompatActivity implements LoginListener {
 
     private Button buttonLogin;
     private ProgressBar progressBar;
     private String username;
     private String password;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +41,22 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
             Intent intent = new Intent(this, ClassesActivity.class);
             username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
             password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
+            name = sharedPreferences.getString(getString(R.string.saved_name_key), LoginManager.DEFAULT_NAME);
             intent.putExtra(getString(R.string.saved_username_key), username);
             intent.putExtra(getString(R.string.saved_password_key), password);
+            intent.putExtra(getString(R.string.saved_name_key), name);
             startActivity(intent);
         }
     }
 
     @Override
-    public void onLoginSuccessful(Cookies cookies, boolean isParentAccount){
+    public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount){
+        this.name = name;
         saveUsernamePassword();
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
         intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());
         intent.putExtra(getString(R.string.extra_cookie_values), cookies.getValues());
+        intent.putExtra(getString(R.string.saved_name_key), name);
         startActivity(intent);
     }
 
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(getString(R.string.saved_username_key), username);
         editor.putString(getString(R.string.saved_password_key), password);
+        editor.putString(getString(R.string.saved_name_key), name);
         editor.apply();
     }
 

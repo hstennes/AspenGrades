@@ -23,6 +23,11 @@ public class LoginManager {
     private static final String LOGIN_URL = "https://aspen.cps.edu/aspen/logon.do";
 
     /**
+     * The default name for the user when the name cannot be found
+     */
+    public static final String DEFAULT_NAME = "GradeLeaf";
+
+    /**
      * The length of time the app will wait for a response when attempting to connect to a page
      */
     public static int TIMEOUT = 15000;
@@ -33,10 +38,10 @@ public class LoginManager {
     private static final String LOGIN_FORM_EVENT = "930";
 
     /**
-     * A keyword that appears in the header of Aspen when signed into a student account but NOT when signed into a parent account
+     * A keyword that appears in the header of Aspen when signed into a parent account but NOT when signed into a student account
      * Should probably think of a more reliable system
      */
-    private static final String studentAccountKeyword = "NETWORK";
+    private static final String PARENT_ACCOUNT_KEYWORD = "Family";
 
     /**
      * Attempts to login using the given credentials
@@ -68,21 +73,27 @@ public class LoginManager {
 
         @Override
         protected LoginResult doInBackground(String... params) {
+            String name = DEFAULT_NAME;
             try {
                 Connection.Response loginForm = Jsoup.connect(LOGIN_URL)
                         .method(Connection.Method.GET)
                         .timeout(TIMEOUT)
                         .execute();
                 Document doc = attemptLogin(loginForm, params[0], params[1]);
-                if(!doc.title().equals("Aspen")) return new LoginResult(null, INVALID_CREDENTIALS, false);
-                boolean isParent = !doc.getElementById("header")
-                        .child(2)
-                        .text()
-                        .contains(studentAccountKeyword);
-                return new LoginResult(new Cookies(loginForm.cookies()), SUCCESSFUL, isParent);
-            }catch (IOException e){
+
+                if(!doc.title().equals("Aspen"))
+                    return new LoginResult(null, INVALID_CREDENTIALS, name, false);
+                String headerText = doc.getElementById("header").text();
+                boolean isParentAccount = headerText.contains(PARENT_ACCOUNT_KEYWORD);
+                String[] headerStrs = headerText.split(" ");
+                for(int i = 0; i < headerStrs.length; i++){
+                    if(headerStrs[i].contains(",")) name = headerStrs[i] + " " + headerStrs[i + 1];
+                }
+
+                return new LoginResult(new Cookies(loginForm.cookies()), SUCCESSFUL, name, isParentAccount);
+            }catch (IOException | IndexOutOfBoundsException e){
                 e.printStackTrace();
-                return new LoginResult(null, ASPEN_UNAVAILABLE, false);
+                return new LoginResult(null, ASPEN_UNAVAILABLE, name, false);
             }
         }
 
@@ -102,7 +113,7 @@ public class LoginManager {
 
         @Override
         protected void onPostExecute(LoginResult result){
-            if(result.status == SUCCESSFUL) listener.onLoginSuccessful(result.cookies, result.isParentAccount);
+            if(result.status == SUCCESSFUL) listener.onLoginSuccessful(result.cookies, result.name, result.isParentAccount);
             else if(result.status == INVALID_CREDENTIALS) listener.onInvalidCredentials();
             else if(result.status == ASPEN_UNAVAILABLE) listener.onLoginFailed();
         }
@@ -111,11 +122,13 @@ public class LoginManager {
     private static class LoginResult{
         public Cookies cookies;
         public AspenTaskStatus status;
+        public String name;
         public boolean isParentAccount;
 
-        public LoginResult(Cookies cookies, AspenTaskStatus status, boolean isParentAccount){
+        public LoginResult(Cookies cookies, AspenTaskStatus status, String name, boolean isParentAccount){
             this.cookies = cookies;
             this.status = status;
+            this.name = name;
             this.isParentAccount = isParentAccount;
         }
     }

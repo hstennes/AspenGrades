@@ -95,7 +95,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     }
 
     @Override
-    public void onLoginSuccessful(Cookies cookies) {
+    public void onLoginSuccessful(Cookies cookies, boolean isParentAccount) {
         this.cookies = cookies;
         termLoader = new TermLoader(adapter, cookies);
         termLoader.readAllTerms(favTerm);

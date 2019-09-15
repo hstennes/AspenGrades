@@ -20,6 +20,7 @@
     <string name="extra_main_activity_relaunch">relaunch</string>
     <string name="action_logout">logout</string>
     <string name="action_swap_assignment_view">toggle view</string>
+    <string name="action_switch_student">switch student</string>
     <string name="credentials_file_key">com.aspengrades.USERNAME_PASSWORD</string>
     <string name="fav_term_file_key">com.aspengrades.FAV_TERM</string>
     <string name="saved_username_key">username</string>

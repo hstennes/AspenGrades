@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void onLoginSuccessful(Cookies cookies){
+    public void onLoginSuccessful(Cookies cookies, boolean isParentAccount){
         saveUsernamePassword();
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
         intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());

@@ -50,7 +50,7 @@ public class ClassInfo {
      * @param cookies The cookies from LoginManager
      */
     public static void readClassInfo(ClassInfoListener listener, int term, String classId, String token, Cookies cookies){
-        new ClassInfoTask(listener).execute(new TaskParams(term, cookies, classId, token));
+        new ClassInfoTask(listener, term, classId, token).execute(cookies);
     }
 
     /**
@@ -90,7 +90,7 @@ public class ClassInfo {
     /**
      * An AsyncTask for getting the data from Aspen
      */
-    private static class ClassInfoTask extends AsyncTask<TaskParams, Void, ClassInfo>{
+    private static class ClassInfoTask extends AsyncTask<Cookies, Void, ClassInfo>{
 
         /**
          * The listener to notify when the task is complete
@@ -98,19 +98,40 @@ public class ClassInfo {
         private ClassInfoListener listener;
 
         /**
-         * Creates a ClassInfoTask that will notify the given listener when it is complete
-         * @param listener The ClassInfoListener to notify
+         * The term to read info for
          */
-        public ClassInfoTask(ClassInfoListener listener){
+        private int term;
+
+        /**
+         * The class ID
+         */
+        private String classId;
+
+        /**
+         * The token from ClassList
+         */
+        private String token;
+
+        /**
+         * Creates a new ClassInfoTask
+         * @param listener The listener
+         * @param term The term
+         * @param classId The class ID
+         * @param token The token
+         */
+        public ClassInfoTask(ClassInfoListener listener, int term, String classId, String token){
             this.listener = listener;
+            this.term = term;
+            this.classId = classId;
+            this.token = token;
         }
 
         @Override
-        protected ClassInfo doInBackground(TaskParams... params) {
+        protected ClassInfo doInBackground(Cookies... cookies) {
             try {
-                new TermSelector().selectTerm(params[0].cookies, params[0].term, null);
-                CategoryList cList = new CategoryList().readCategories(params[0].cookies, params[0].classId, params[0].classesToken);
-                AssignmentList aList = new AssignmentList().readAssignments(params[0].cookies, params[0].classesToken);
+                new TermSelector().selectTerm(cookies[0], term, null);
+                CategoryList cList = new CategoryList().readCategories(cookies[0], classId, token);
+                AssignmentList aList = new AssignmentList().readAssignments(cookies[0], token);
                 return new ClassInfo(cList, aList, SUCCESSFUL);
             }catch (IOException e){
                 if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
@@ -125,39 +146,6 @@ public class ClassInfo {
         @Override
         protected void onPostExecute(ClassInfo classInfo){
             listener.onClassInfoRead(classInfo);
-        }
-    }
-
-    /**
-     * Holds all information needed by ClassInfoTask
-     */
-    public static class TaskParams{
-        private int term;
-        private Cookies cookies;
-        private String classId;
-        private String classesToken;
-
-        private TaskParams(int term, Cookies cookies, String classId, String classesToken){
-            this.term = term;
-            this.cookies = cookies;
-            this.classId = classId;
-            this.classesToken = classesToken;
-        }
-
-        public int getTerm(){
-            return term;
-        }
-
-        public Cookies getCookies() {
-            return cookies;
-        }
-
-        public String getClassId() {
-            return classId;
-        }
-
-        public String getClassesToken() {
-            return classesToken;
         }
     }
 }

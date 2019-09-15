@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.NO_DATA;
@@ -54,12 +55,17 @@ public class ClassList extends ArrayList<SchoolClass> {
     private String token;
 
     /**
+     * Maps the names of available students to their student IDs if the user is on a parent account
+     */
+    private HashMap<String, String> students;
+
+    /**
      * The result of the attempt to read the classes
      */
     private AspenTaskStatus status;
 
     /**
-     * Creates a new ClassList object
+     * Creates a new ClassList object. The students HashMap should be null unless a parent account is being used.
      * @param term The term the classes were read from
      * @param token The token read from the classes page
      * @param status The result of attempting to read data
@@ -100,6 +106,14 @@ public class ClassList extends ArrayList<SchoolClass> {
         return token;
     }
 
+    public HashMap<String, String> getStudents(){
+        return students;
+    }
+
+    public boolean isParentAccount(){
+        return !(students == null);
+    }
+
     public AspenTaskStatus getStatus(){
         return status;
     }
@@ -108,11 +122,6 @@ public class ClassList extends ArrayList<SchoolClass> {
      * An AsyncTask for reading data from Aspen
      */
     private static class ReadClassesTask extends AsyncTask<Cookies, Void, ClassList>{
-
-        /**
-         * The listener to notify when the task is complete
-         */
-        private ClassesListener listener;
 
         /**
          * The term to read classes from
@@ -125,9 +134,15 @@ public class ClassList extends ArrayList<SchoolClass> {
         private String studentOid;
 
         /**
+         * The listener to be notified when the classes are read
+         */
+        private ClassesListener listener;
+
+        /**
          * Creates a new ReadClassesTask
          * @param listener The listener
          * @param term The term
+         * @param studentOid The student OID (if needed)
          */
         private ReadClassesTask(ClassesListener listener, int term, String studentOid){
             this.listener = listener;
@@ -146,18 +161,35 @@ public class ClassList extends ArrayList<SchoolClass> {
 
             try {
                 String token = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]").attr("value");
-                ClassList classes = new ClassList(term, token, SUCCESSFUL);
+                Element studentSelect = doc.selectFirst("select[name=selectedStudentOid]");
                 Element tbody = doc.getElementById("dataGrid").child(0).child(0);
-                int[] indexes = getInfoIndexes(tbody.child(0));
-                for(int i = 1; i < tbody.children().size() - 1; i++){
-                    classes.add(new SchoolClass(tbody.child(i), indexes[0], indexes[1]));
-                }
-                if(classes.size() == 0) classes.status = NO_DATA;
-                return classes;
+                return makeClassList(token, studentSelect, tbody);
             }
             catch(IndexOutOfBoundsException | NumberFormatException e){
                 return new ClassList(term, null, PARSING_ERROR);
             }
+        }
+
+        private ClassList makeClassList(String token, Element studentSelect, Element tbody){
+            ClassList classes = new ClassList(term, token, SUCCESSFUL);
+            if(studentSelect != null){
+                HashMap<String, String> students = new HashMap<>();
+                for(int i = 0; i < studentSelect.children().size(); i++){
+                    Element studentData = studentSelect.child(i);
+                    students.put(studentData.text(), studentData.attr("value"));
+                }
+                classes.students = students;
+            }
+
+            if(tbody.children().size() == 2) {
+                classes.status = NO_DATA;
+                return classes;
+            }
+            int[] indexes = getInfoIndexes(tbody.child(0));
+            for(int i = 1; i < tbody.children().size() - 1; i++){
+                classes.add(new SchoolClass(tbody.child(i), indexes[0], indexes[1]));
+            }
+            return classes;
         }
 
         /**

@@ -33,6 +33,12 @@ public class LoginManager {
     private static final String LOGIN_FORM_EVENT = "930";
 
     /**
+     * A keyword that appears in the header of Aspen when signed into a student account but NOT when signed into a parent account
+     * Should probably think of a more reliable system
+     */
+    private static final String studentAccountKeyword = "NETWORK";
+
+    /**
      * Attempts to login using the given credentials
      * @param listener The listener to notify when the task is complete
      * @param username The username given by the user
@@ -45,17 +51,12 @@ public class LoginManager {
     /**
      * An AsyncTask for logging into Aspen
      */
-    private static class LoginTask extends AsyncTask<String, Void, Cookies>{
+    private static class LoginTask extends AsyncTask<String, Void, LoginResult>{
 
         /**
          * The listener to notify when the task is complete
          */
         private LoginListener listener;
-
-        /**
-         * The result of attempting to login
-         */
-        private AspenTaskStatus status;
 
         /**
          * Creates a new LoginTask
@@ -66,44 +67,56 @@ public class LoginManager {
         }
 
         @Override
-        protected Cookies doInBackground(String... params) {
-            String username = params[0];
-            String password = params[1];
+        protected LoginResult doInBackground(String... params) {
             try {
                 Connection.Response loginForm = Jsoup.connect(LOGIN_URL)
                         .method(Connection.Method.GET)
                         .timeout(TIMEOUT)
                         .execute();
-                Document doc = loginForm.parse();
-                String loginToken = doc.select("input[name=org.apache.struts.taglib.html.TOKEN]")
-                        .attr("value");
-                doc = Jsoup.connect(LOGIN_URL)
-                        .data("org.apache.struts.taglib.html.TOKEN", loginToken)
-                        .data("userEvent", LOGIN_FORM_EVENT)
-                        .data("deploymentId", "aspen")
-                        .data("username", username)
-                        .data("password", password)
-                        .cookies(loginForm.cookies())
-                        .post();
-
-                if(!doc.title().equals("Aspen")){
-                    status = INVALID_CREDENTIALS;
-                    return null;
-                }
-                else status = SUCCESSFUL;
-                return new Cookies(loginForm.cookies());
+                Document doc = attemptLogin(loginForm, params[0], params[1]);
+                if(!doc.title().equals("Aspen")) return new LoginResult(null, INVALID_CREDENTIALS, false);
+                boolean isParent = !doc.getElementById("header")
+                        .child(2)
+                        .text()
+                        .contains(studentAccountKeyword);
+                return new LoginResult(new Cookies(loginForm.cookies()), SUCCESSFUL, isParent);
             }catch (IOException e){
                 e.printStackTrace();
-                status = ASPEN_UNAVAILABLE;
+                return new LoginResult(null, ASPEN_UNAVAILABLE, false);
             }
-            return null;
+        }
+
+        private Document attemptLogin(Connection.Response loginForm, String username, String password) throws IOException{
+            String loginToken = loginForm.parse()
+                    .select("input[name=org.apache.struts.taglib.html.TOKEN]")
+                    .attr("value");
+            return Jsoup.connect(LOGIN_URL)
+                    .data("org.apache.struts.taglib.html.TOKEN", loginToken)
+                    .data("userEvent", LOGIN_FORM_EVENT)
+                    .data("deploymentId", "aspen")
+                    .data("username", username)
+                    .data("password", password)
+                    .cookies(loginForm.cookies())
+                    .post();
         }
 
         @Override
-        protected void onPostExecute(Cookies cookies){
-            if(status == SUCCESSFUL) listener.onLoginSuccessful(cookies);
-            else if(status == INVALID_CREDENTIALS) listener.onInvalidCredentials();
-            else if(status == ASPEN_UNAVAILABLE) listener.onLoginFailed();
+        protected void onPostExecute(LoginResult result){
+            if(result.status == SUCCESSFUL) listener.onLoginSuccessful(result.cookies, result.isParentAccount);
+            else if(result.status == INVALID_CREDENTIALS) listener.onInvalidCredentials();
+            else if(result.status == ASPEN_UNAVAILABLE) listener.onLoginFailed();
+        }
+    }
+
+    private static class LoginResult{
+        public Cookies cookies;
+        public AspenTaskStatus status;
+        public boolean isParentAccount;
+
+        public LoginResult(Cookies cookies, AspenTaskStatus status, boolean isParentAccount){
+            this.cookies = cookies;
+            this.status = status;
+            this.isParentAccount = isParentAccount;
         }
     }
 }

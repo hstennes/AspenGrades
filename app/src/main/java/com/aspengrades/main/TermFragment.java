@@ -123,7 +123,6 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
                 isError ? R.color.colorError: R.color.colorStatus));
         textStatus.setText(text);
         textStatus.setVisibility(View.VISIBLE);
-        System.out.println(textStatus.getTextSize());
     }
 
     public void giveParams(ClassList classList, ClassesActivity classesActivity){

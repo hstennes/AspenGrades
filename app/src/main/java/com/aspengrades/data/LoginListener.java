@@ -6,7 +6,7 @@ public interface LoginListener {
      * Called when the user is logged in and the app is ready to read data
      * @param cookies The cookies returned by the login process
      */
-    void onLoginSuccessful(Cookies cookies);
+    void onLoginSuccessful(Cookies cookies, boolean isParent);
 
     /**
      * Called when the user's username or password were incorrect

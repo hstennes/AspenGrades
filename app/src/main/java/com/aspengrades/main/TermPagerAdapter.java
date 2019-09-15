@@ -9,8 +9,8 @@ import com.aspengrades.data.ClassesListener;
 
 public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesListener {
 
-    private ClassList[] classLists;
     private Fragment[] fragments;
+    private ClassList[] classLists;
     private ClassesActivity classesActivity;
 
     public TermPagerAdapter(FragmentManager fm, ClassesActivity classesActivity) {
@@ -23,7 +23,7 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
     @Override
     public Fragment getItem(int i) {
         TermFragment fragment = new TermFragment();
-        fragment.giveParams(classLists[i], classesActivity);
+        fragment.setParams(classLists[i], classesActivity);
         fragments[i] = fragment;
         return fragment;
     }
@@ -40,6 +40,7 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
 
     @Override
     public void onClassesRead(ClassList classList) {
+        notifyDataSetChanged();
         int index = classList.getTerm() - 1;
         classLists[index] = classList;
         if(fragments[index] != null) ((TermFragment) fragments[index]).onClassesRead(classList);

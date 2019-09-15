@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.aspengrades.data.Cookies;
@@ -24,6 +23,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     private TermPagerAdapter adapter;
     private TermLoader termLoader;
     private int favTerm;
+    private boolean isParentAccount;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -43,6 +43,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         Intent intent = getIntent();
         if(getSupportActionBar() != null)
             getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.saved_name_key)));
+        isParentAccount = intent.getBooleanExtra(getString(R.string.saved_is_parent_key), false);
         boolean loggedIn = intent.hasExtra(getString(R.string.extra_cookie_keys));
         if(loggedIn) {
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
@@ -60,8 +61,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_classes, menu);
+        getMenuInflater().inflate(R.menu.menu_classes, menu);
+        if(isParentAccount) menu.findItem(R.id.action_switch_student).setVisible(true);
         return true;
     }
 

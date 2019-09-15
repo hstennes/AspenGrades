@@ -7,7 +7,7 @@
         android:icon="@drawable/sharp_perm_identity_white_48dp"
         android:title="@string/action_switch_student"
         app:showAsAction="ifRoom"
-        android:visible="true"/>
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_logout"

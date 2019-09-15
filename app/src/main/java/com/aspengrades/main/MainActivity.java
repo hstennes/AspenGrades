@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
     private String username;
     private String password;
     private String name;
+    private boolean isParentAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
         if(getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.toolbar_login);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials_file_key), Context.MODE_PRIVATE);
-        if(!sharedPreferences.contains(getString(R.string.saved_username_key)) ||
+        if(!sharedPreferences.contains(getString(R.string.saved_name_key)) ||
                 getIntent().hasExtra(getString(R.string.extra_main_activity_relaunch))) {
             setupButtonListener();
         }
@@ -42,9 +43,11 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
             username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
             password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
             name = sharedPreferences.getString(getString(R.string.saved_name_key), LoginManager.DEFAULT_NAME);
+            isParentAccount = sharedPreferences.getBoolean(getString(R.string.saved_is_parent_key), false);
             intent.putExtra(getString(R.string.saved_username_key), username);
             intent.putExtra(getString(R.string.saved_password_key), password);
             intent.putExtra(getString(R.string.saved_name_key), name);
+            intent.putExtra(getString(R.string.saved_is_parent_key), isParentAccount);
             startActivity(intent);
         }
     }
@@ -52,11 +55,13 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
     @Override
     public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount){
         this.name = name;
+        this.isParentAccount = isParentAccount;
         saveUsernamePassword();
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
         intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());
         intent.putExtra(getString(R.string.extra_cookie_values), cookies.getValues());
         intent.putExtra(getString(R.string.saved_name_key), name);
+        intent.putExtra(getString(R.string.saved_is_parent_key), isParentAccount);
         startActivity(intent);
     }
 
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
         editor.putString(getString(R.string.saved_username_key), username);
         editor.putString(getString(R.string.saved_password_key), password);
         editor.putString(getString(R.string.saved_name_key), name);
+        editor.putBoolean(getString(R.string.saved_is_parent_key), isParentAccount);
         editor.apply();
     }
 

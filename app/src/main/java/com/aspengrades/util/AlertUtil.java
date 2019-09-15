@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 
+import com.aspengrades.data.LoginManager;
 import com.aspengrades.main.ClassesActivity;
 import com.aspengrades.main.R;
 
@@ -36,9 +37,13 @@ public class AlertUtil {
                 Context.MODE_PRIVATE);
         String username = sharedPreferences.getString(activity.getString(R.string.saved_username_key), "");
         String password = sharedPreferences.getString(activity.getString(R.string.saved_password_key), "");
+        String name = sharedPreferences.getString(activity.getString(R.string.saved_name_key), LoginManager.DEFAULT_NAME);
+        boolean isParentAccount = sharedPreferences.getBoolean(activity.getString(R.string.saved_is_parent_key), false);
         Intent intent = new Intent(activity, ClassesActivity.class);
         intent.putExtra(activity.getString(R.string.saved_username_key), username);
         intent.putExtra(activity.getString(R.string.saved_password_key), password);
+        intent.putExtra(activity.getString(R.string.saved_name_key), name);
+        intent.putExtra(activity.getString(R.string.saved_is_parent_key), isParentAccount);
         activity.startActivity(intent);
     }
 }

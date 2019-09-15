@@ -64,7 +64,6 @@ public class TermLoader implements ClassesListener {
      */
     @Override
     public void onClassesRead(ClassList classList) {
-
         if(classList.isParentAccount()) System.out.println("Students: " + classList.getStudents());
         else System.out.println("Not parent account");
 

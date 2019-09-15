@@ -44,6 +44,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         if(getSupportActionBar() != null)
             getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.saved_name_key)));
         isParentAccount = intent.getBooleanExtra(getString(R.string.saved_is_parent_key), false);
+
         boolean loggedIn = intent.hasExtra(getString(R.string.extra_cookie_keys));
         if(loggedIn) {
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));

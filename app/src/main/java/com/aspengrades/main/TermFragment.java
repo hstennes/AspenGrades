@@ -3,7 +3,6 @@ package com.aspengrades.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -43,12 +42,8 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             if(classList.getStatus() == SUCCESSFUL) setupClassList(view);
             else showStatusMessage(view);
         }
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         created = true;
+        return view;
     }
 
     @Override
@@ -124,5 +119,19 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         this.classesActivity = classesActivity;
         idMap = new HashMap<>();
         nameMap = new HashMap<>();
+    }
+
+    public void reset(){
+        View view = getView();
+        classList = null;
+        idMap.clear();
+        nameMap.clear();
+        if(view != null) {
+            view.findViewById(R.id.progress_circular).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.text_status).setVisibility(View.INVISIBLE);
+            LinearLayout classesLayout = view.findViewById(R.id.layout_classes);
+            classesLayout.removeViews(1, classesLayout.getChildCount() - 1);
+            view.findViewById(R.id.scroll_view).setVisibility(View.GONE);
+        }
     }
 }

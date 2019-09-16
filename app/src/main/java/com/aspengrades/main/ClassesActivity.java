@@ -25,6 +25,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     private int favTerm;
     private boolean isParentAccount;
 
+    private boolean student = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -32,7 +34,6 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         favTerm = readFavTerm();
-
         adapter = new TermPagerAdapter(getSupportFragmentManager(), this);
         pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
@@ -44,7 +45,6 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         if(getSupportActionBar() != null)
             getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.saved_name_key)));
         isParentAccount = intent.getBooleanExtra(getString(R.string.saved_is_parent_key), false);
-
         boolean loggedIn = intent.hasExtra(getString(R.string.extra_cookie_keys));
         if(loggedIn) {
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
@@ -73,6 +73,12 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials_file_key), Context.MODE_PRIVATE);
             sharedPreferences.edit().clear().apply();
             relaunchMainActivity();
+            return true;
+        }
+        else if(item.getItemId() == R.id.action_switch_student){
+            student = !student;
+            adapter.reset();
+            termLoader.readAllTerms(favTerm, student ? "std01000113136" : "std01000160524");
             return true;
         }
         else return super.onOptionsItemSelected(item);

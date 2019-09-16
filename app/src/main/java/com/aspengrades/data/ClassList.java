@@ -77,16 +77,6 @@ public class ClassList extends ArrayList<SchoolClass> {
     }
 
     /**
-     * Reads the classes for the given term
-     * @param listener The listener to notify when the task is complete
-     * @param term The term to read classes from
-     * @param cookies The cookies from LoginManager
-     */
-    public static void readClasses(ClassesListener listener, int term, Cookies cookies){
-        new ReadClassesTask(listener, term, null).execute(cookies);
-    }
-
-    /**
      * Reads the classes for the given term and student OID. This method need only be used instead of readClasses(ClassesListener, int,
      * Cookies) when the app is logged into a parent account and selecting a specific student.
      * @param listener The listener to notify when the task is complete

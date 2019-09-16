@@ -45,4 +45,11 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
         classLists[index] = classList;
         if(fragments[index] != null) ((TermFragment) fragments[index]).onClassesRead(classList);
     }
+
+    public void reset(){
+        classLists = new ClassList[ClassList.NUM_TERMS];
+        for(Fragment fragment : fragments){
+            if(fragment != null) ((TermFragment) fragment).reset();
+        }
+    }
 }

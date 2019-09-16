@@ -16,6 +16,11 @@ public class TermLoader implements ClassesListener {
     private Cookies cookies;
 
     /**
+     * The student OID (can be null)
+     */
+    private String studentOid;
+
+    /**
      * The order to load the terms in
      */
     private int[] loadingOrder;
@@ -54,8 +59,23 @@ public class TermLoader implements ClassesListener {
      * @param priorityTerm The term that will be loaded first
      */
     public void readAllTerms(int priorityTerm){
+        readAllTerms(priorityTerm, null);
+    }
+
+    /**
+     * Reads all terms for the specified student, starting with the given term and following with the closest terms to the given term.
+     * For example, if term 3 is given, the terms will be loaded in the order 3, 2, 4, 1. If term 4 is given, the terms will be loaded
+     * in the order 4, 3, 2, 1. The student OID can be null unless selecting a specific student on a parent account.
+     * @param priorityTerm The term that will be loaded first
+     * @param studentOid The student OID
+     */
+    public void readAllTerms(int priorityTerm, String studentOid){
+        this.studentOid = studentOid;
+        continueLoading = true;
+        done = false;
+        loadingIndex = 0;
         loadingOrder = getLoadingOrder(priorityTerm);
-        ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
+        ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
     }
 
     /**
@@ -71,7 +91,7 @@ public class TermLoader implements ClassesListener {
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;
         else if(continueLoading)
-            ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
+            ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
     }
 
     /**
@@ -87,7 +107,7 @@ public class TermLoader implements ClassesListener {
     public void resumeIfNecessary(){
         if(!done && !continueLoading) {
             continueLoading = true;
-            ClassList.readClasses(this, loadingOrder[loadingIndex], cookies);
+            ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
         }
     }
 

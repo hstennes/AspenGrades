@@ -1,5 +1,7 @@
 package com.aspengrades.data;
 
+import java.util.ArrayList;
+
 /**
  * Manages the loading of all terms in a specific order
  */
@@ -8,7 +10,7 @@ public class TermLoader implements ClassesListener {
     /**
      * The listener to notify when the ClassList for a certain term has been loaded
      */
-    private ClassesListener classesListener;
+    private ArrayList<ClassesListener> listeners;
 
     /**
      * The cookies from LoginManager
@@ -42,15 +44,22 @@ public class TermLoader implements ClassesListener {
 
     /**
      * Creates a new TermLoader
-     * @param classesListener The listener to notify when a term has been loaded
      * @param cookies The cookies from LoginManager
      */
-    public TermLoader(ClassesListener classesListener, Cookies cookies){
-        this.classesListener = classesListener;
+    public TermLoader(Cookies cookies){
         this.cookies = cookies;
+        listeners = new ArrayList<>();
         continueLoading = true;
         done = false;
         loadingIndex = 0;
+    }
+
+    /**
+     * Adds a listener to be notified when a class list is loaded.
+     * @param listener The listener to notify
+     */
+    public void addClassesListener(ClassesListener listener){
+        listeners.add(listener);
     }
 
     /**
@@ -87,7 +96,7 @@ public class TermLoader implements ClassesListener {
         if(classList.isParentAccount()) System.out.println("Students: " + classList.getStudents());
         else System.out.println("Not parent account");
 
-        if(classesListener != null) classesListener.onClassesRead(classList);
+        for(ClassesListener cl : listeners) cl.onClassesRead(classList);
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;
         else if(continueLoading)

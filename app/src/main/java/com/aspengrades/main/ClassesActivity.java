@@ -50,7 +50,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
             String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
             cookies = new Cookies(keys, values);
-            termLoader = new TermLoader(adapter, cookies);
+            termLoader = new TermLoader(cookies);
+            termLoader.addClassesListener(adapter);
             termLoader.readAllTerms(favTerm);
         }
         else{
@@ -76,6 +77,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             return true;
         }
         else if(item.getItemId() == R.id.action_switch_student){
+            //item.setEnabled(false);
+            //item.getIcon().mutate().setAlpha(130);
             student = !student;
             adapter.reset();
             termLoader.readAllTerms(favTerm, student ? "std01000113136" : "std01000160524");
@@ -107,7 +110,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     @Override
     public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount) {
         this.cookies = cookies;
-        termLoader = new TermLoader(adapter, cookies);
+        termLoader = new TermLoader(cookies);
+        termLoader.addClassesListener(adapter);
         termLoader.readAllTerms(favTerm);
     }
 

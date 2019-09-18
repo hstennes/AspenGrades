@@ -55,6 +55,11 @@ public class ClassList extends ArrayList<SchoolClass> {
     private String token;
 
     /**
+     * The student OID supplied when calling the readClasses method, even if it was invalid or null
+     */
+    private String studentOid;
+
+    /**
      * Maps the names of available students to their student IDs if the user is on a parent account
      */
     private HashMap<String, String> students;
@@ -68,11 +73,13 @@ public class ClassList extends ArrayList<SchoolClass> {
      * Creates a new ClassList object. The students HashMap should be null unless a parent account is being used.
      * @param term The term the classes were read from
      * @param token The token read from the classes page
+     * @param studentOid The student OID (can be null)
      * @param status The result of attempting to read data
      */
-    private ClassList(int term, String token, AspenTaskStatus status){
+    private ClassList(int term, String token, String studentOid, AspenTaskStatus status){
         this.term = term;
         this.token = token;
+        this.studentOid = studentOid;
         this.status = status;
     }
 
@@ -98,6 +105,10 @@ public class ClassList extends ArrayList<SchoolClass> {
 
     public HashMap<String, String> getStudents(){
         return students;
+    }
+
+    public String getStudentOid(){
+        return studentOid;
     }
 
     public boolean isParentAccount(){
@@ -146,7 +157,7 @@ public class ClassList extends ArrayList<SchoolClass> {
             try{
                 doc = new TermSelector().selectTerm(cookies[0], term, studentOid);
             }catch (IOException e){
-                return new ClassList(term, null, ASPEN_UNAVAILABLE);
+                return new ClassList(term, null, studentOid, ASPEN_UNAVAILABLE);
             }
 
             try {
@@ -156,12 +167,12 @@ public class ClassList extends ArrayList<SchoolClass> {
                 return makeClassList(token, studentSelect, tbody);
             }
             catch(IndexOutOfBoundsException | NumberFormatException e){
-                return new ClassList(term, null, PARSING_ERROR);
+                return new ClassList(term, null, studentOid, PARSING_ERROR);
             }
         }
 
         private ClassList makeClassList(String token, Element studentSelect, Element tbody){
-            ClassList classes = new ClassList(term, token, SUCCESSFUL);
+            ClassList classes = new ClassList(term, token, studentOid, SUCCESSFUL);
             if(studentSelect != null){
                 HashMap<String, String> students = new HashMap<>();
                 for(int i = 0; i < studentSelect.children().size(); i++){

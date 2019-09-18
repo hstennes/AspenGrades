@@ -81,6 +81,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             //item.getIcon().mutate().setAlpha(130);
             student = !student;
             adapter.reset();
+            adapter.restrictToStudent(student ? "std01000113136" : "std01000160524");
             termLoader.readAllTerms(favTerm, student ? "std01000113136" : "std01000160524");
             return true;
         }

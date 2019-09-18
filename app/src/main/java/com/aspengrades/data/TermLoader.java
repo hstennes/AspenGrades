@@ -93,14 +93,11 @@ public class TermLoader implements ClassesListener {
      */
     @Override
     public void onClassesRead(ClassList classList) {
-        if(classList.isParentAccount()) System.out.println("Students: " + classList.getStudents());
-        else System.out.println("Not parent account");
-
+        if(classList.getStudentOid() != null && !classList.getStudentOid().equals(studentOid)) return;
         for(ClassesListener cl : listeners) cl.onClassesRead(classList);
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;
-        else if(continueLoading)
-            ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
+        else if(continueLoading) ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
     }
 
     /**

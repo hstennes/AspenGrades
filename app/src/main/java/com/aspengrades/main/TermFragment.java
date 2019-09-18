@@ -1,6 +1,7 @@
 package com.aspengrades.main;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,6 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
     private ClassesActivity classesActivity;
     private HashMap<View, String> idMap;
     private HashMap<View, String> nameMap;
-    private boolean created = false;
     private int term;
 
     @Override
@@ -42,7 +42,6 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             if(classList.getStatus() == SUCCESSFUL) setupClassList(view);
             else showStatusMessage(view);
         }
-        created = true;
         return view;
     }
 
@@ -50,7 +49,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
     public void onClassesRead(ClassList classList) {
         View view = getView();
         this.classList = classList;
-        if(view != null && created) {
+        if(view != null) {
             view.findViewById(R.id.progress_circular).setVisibility(View.GONE);
             if(classList.getStatus() == SUCCESSFUL) {
                 view.findViewById(R.id.scroll_view).setVisibility(View.VISIBLE);
@@ -78,7 +77,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
         TextView textTerm = view.findViewById(R.id.text_term);
         textTerm.setText(getString(R.string.text_term, Integer.toString(classList.getTerm())));
 
-        for(SchoolClass schoolClass : classList){
+        for(SchoolClass schoolClass : classList) {
             View classButton = getLayoutInflater().inflate(R.layout.class_button, classesLayout, false);
             idMap.put(classButton, schoolClass.getId());
             nameMap.put(classButton, schoolClass.getDescription());
@@ -88,11 +87,11 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             TextView grade = classButton.findViewById(R.id.text_grade);
             description.setText(schoolClass.getDescription());
             float gradeVal = schoolClass.getTermGrade();
-            if(gradeVal != -1) {
+            if (gradeVal != -1) {
                 grade.setText(String.format(Locale.getDefault(), "%.2f", gradeVal));
                 classButton.setOnClickListener(this);
             }
-            classButton.setBackgroundColor(ColorUtil.colorFromGrade(getContext(), gradeVal));
+            classButton.getBackground().setColorFilter(ColorUtil.colorFromGrade(getContext(), gradeVal), PorterDuff.Mode.SRC);
             classesLayout.addView(classButton);
         }
     }

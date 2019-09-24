@@ -11,21 +11,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.aspengrades.data.ClassList;
+import com.aspengrades.data.ClassesListener;
 import com.aspengrades.data.Cookies;
 import com.aspengrades.data.LoginListener;
 import com.aspengrades.data.LoginManager;
 import com.aspengrades.data.TermLoader;
+import com.aspengrades.util.AlertUtil;
 
-public class ClassesActivity extends AppCompatActivity implements LoginListener {
+import java.util.HashMap;
+
+public class ClassesActivity extends AppCompatActivity implements LoginListener, ClassesListener, AlertUtil.StudentSelectorCallback {
 
     private Cookies cookies;
     private ViewPager pager;
+    private MenuItem selectStudentItem;
     private TermPagerAdapter adapter;
     private TermLoader termLoader;
     private int favTerm;
+    private String studentOid;
+    private HashMap<String, String> students;
     private boolean isParentAccount;
-
-    private boolean student = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -52,6 +58,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             cookies = new Cookies(keys, values);
             termLoader = new TermLoader(cookies);
             termLoader.addClassesListener(adapter);
+            termLoader.addClassesListener(this);
             termLoader.readAllTerms(favTerm);
         }
         else{
@@ -64,7 +71,12 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_classes, menu);
-        if(isParentAccount) menu.findItem(R.id.action_switch_student).setVisible(true);
+        if(isParentAccount) {
+            selectStudentItem = menu.findItem(R.id.action_switch_student);
+            selectStudentItem.setVisible(true);
+            selectStudentItem.setEnabled(false);
+            selectStudentItem.getIcon().mutate().setAlpha(130);
+        }
         return true;
     }
 
@@ -77,15 +89,21 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
             return true;
         }
         else if(item.getItemId() == R.id.action_switch_student){
-            //item.setEnabled(false);
-            //item.getIcon().mutate().setAlpha(130);
-            student = !student;
-            adapter.reset();
-            adapter.restrictToStudent(student ? "std01000113136" : "std01000160524");
-            termLoader.readAllTerms(favTerm, student ? "std01000113136" : "std01000160524");
+            if(students == null) return false;
+            AlertUtil.showStudentSelector(this, this, students, studentOid);
             return true;
         }
         else return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStudentSelected(String studentOid) {
+        if(!studentOid.equals(this.studentOid)) {
+            this.studentOid = studentOid;
+            adapter.reset();
+            adapter.restrictToStudent(studentOid);
+            termLoader.readAllTerms(favTerm, studentOid);
+        }
     }
 
     @Override
@@ -113,6 +131,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
         this.cookies = cookies;
         termLoader = new TermLoader(cookies);
         termLoader.addClassesListener(adapter);
+        termLoader.addClassesListener(this);
         termLoader.readAllTerms(favTerm);
     }
 
@@ -124,6 +143,16 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener 
     @Override
     public void onLoginFailed() {
         relaunchMainActivity();
+    }
+
+    @Override
+    public void onClassesRead(ClassList classList) {
+        this.studentOid = classList.getStudentOid();
+        this.students = classList.getStudents();
+        if(selectStudentItem != null && !selectStudentItem.isEnabled()){
+            selectStudentItem.setEnabled(true);
+            selectStudentItem.getIcon().setAlpha(255);
+        }
     }
 
     private int readFavTerm(){

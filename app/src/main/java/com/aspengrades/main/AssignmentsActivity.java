@@ -1,6 +1,8 @@
 package com.aspengrades.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,13 +19,14 @@ import com.aspengrades.data.AspenTaskStatus;
 import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.ClassInfoListener;
 import com.aspengrades.data.Cookies;
+import com.aspengrades.data.LoginManager;
 import com.aspengrades.util.AlertUtil;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
 import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 
-public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener {
+public class AssignmentsActivity extends AppCompatActivity implements ClassInfoListener, AlertUtil.SessionExpiredCallback {
 
     private CategoryAdapter adapter;
 
@@ -69,7 +72,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         AspenTaskStatus status  = classInfo.getStatus();
 
         if(status == SESSION_EXPIRED)
-            AlertUtil.showSessionExpiredAlert(this);
+            AlertUtil.showSessionExpiredAlert(this, this);
         else if(status == ASPEN_UNAVAILABLE)
             showErrorMessage(getString(R.string.text_network_error));
         else if(status == PARSING_ERROR)
@@ -89,5 +92,27 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
         TextView textError = findViewById(R.id.text_error);
         textError.setText(text);
         textError.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onPositiveButton() {
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getString(R.string.credentials_file_key),
+                Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
+        String password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
+        String name = sharedPreferences.getString(getString(R.string.saved_name_key), LoginManager.DEFAULT_NAME);
+        boolean isParentAccount = sharedPreferences.getBoolean(getString(R.string.saved_is_parent_key), false);
+        Intent intent = new Intent(this, ClassesActivity.class);
+        intent.putExtra(getString(R.string.saved_username_key), username);
+        intent.putExtra(getString(R.string.saved_password_key), password);
+        intent.putExtra(getString(R.string.saved_name_key), name);
+        intent.putExtra(getString(R.string.saved_is_parent_key), isParentAccount);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onNegativeButton() {
+        finish();
     }
 }

@@ -7,6 +7,12 @@ import com.aspengrades.main.R;
 
 public class ColorUtil {
 
+    /**
+     * Returns the color to be used to represent the given letter grade
+     * @param context The context
+     * @param grade The letter grade
+     * @return The color representing the grade
+     */
     public static int colorFromGrade(Context context, float grade){
         int gradeInt = Math.round(grade);
         if(context == null) return 0;

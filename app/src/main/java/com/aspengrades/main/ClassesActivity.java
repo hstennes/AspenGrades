@@ -149,6 +149,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
     public void onClassesRead(ClassList classList) {
         this.studentOid = classList.getStudentOid();
         this.students = classList.getStudents();
+        if(studentOid == null)
+            studentOid = students.values().toArray(new String[1])[0];
         if(selectStudentItem != null && !selectStudentItem.isEnabled()){
             selectStudentItem.setEnabled(true);
             selectStudentItem.getIcon().setAlpha(255);

@@ -9,12 +9,9 @@ import com.aspengrades.data.ClassesListener;
 
 public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesListener {
 
-    public static String NO_RESTRICTION = "";
-
     private Fragment[] fragments;
     private ClassList[] classLists;
     private ClassesActivity classesActivity;
-    private String studentOid = NO_RESTRICTION;
 
     public TermPagerAdapter(FragmentManager fm, ClassesActivity classesActivity) {
         super(fm);
@@ -44,9 +41,6 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
 
     @Override
     public void onClassesRead(ClassList classList) {
-        if(studentOid != null &&
-                !studentOid.equals(NO_RESTRICTION) &&
-                !studentOid.equals(classList.getStudentOid())) return;
         int index = classList.getTerm() - 1;
         classLists[index] = classList;
         if(fragments[index] != null) ((TermFragment) fragments[index]).onClassesRead(classList);
@@ -57,9 +51,5 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
         for(Fragment fragment : fragments){
             if(fragment != null) ((TermFragment) fragment).reset();
         }
-    }
-
-    public void restrictToStudent(String studentOid){
-        this.studentOid = studentOid;
     }
 }

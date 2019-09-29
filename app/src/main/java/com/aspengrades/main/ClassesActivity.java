@@ -101,7 +101,6 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
         if(!studentOid.equals(this.studentOid)) {
             this.studentOid = studentOid;
             adapter.reset();
-            adapter.restrictToStudent(studentOid);
             termLoader.readAllTerms(favTerm, studentOid);
         }
     }
@@ -149,7 +148,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
     public void onClassesRead(ClassList classList) {
         this.studentOid = classList.getStudentOid();
         this.students = classList.getStudents();
-        if(studentOid == null)
+        if(studentOid == null && students != null)
             studentOid = students.values().toArray(new String[1])[0];
         if(selectStudentItem != null && !selectStudentItem.isEnabled()){
             selectStudentItem.setEnabled(true);

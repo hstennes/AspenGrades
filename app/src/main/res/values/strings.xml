@@ -19,6 +19,7 @@
     <string name="extra_class_description">description</string>
     <string name="extra_main_activity_relaunch">relaunch</string>
     <string name="action_logout">logout</string>
+    <string name="action_refresh">refresh</string>
     <string name="action_swap_assignment_view">toggle view</string>
     <string name="action_switch_student">switch student</string>
     <string name="credentials_file_key">com.aspengrades.USERNAME_PASSWORD</string>

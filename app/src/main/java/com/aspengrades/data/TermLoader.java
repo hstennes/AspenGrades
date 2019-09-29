@@ -43,6 +43,11 @@ public class TermLoader implements ClassesListener {
     private boolean done;
 
     /**
+     * The current taskId, which is incremented on each call of readAllTerms to prevent the loading of multiple terms at once
+     */
+    private int taskId = 0;
+
+    /**
      * Creates a new TermLoader
      * @param cookies The cookies from LoginManager
      */
@@ -79,25 +84,27 @@ public class TermLoader implements ClassesListener {
      * @param studentOid The student OID
      */
     public void readAllTerms(int priorityTerm, String studentOid){
+        taskId++;
         this.studentOid = studentOid;
         continueLoading = true;
         done = false;
         loadingIndex = 0;
         loadingOrder = getLoadingOrder(priorityTerm);
-        ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
+        ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies, taskId);
     }
 
     /**
-     * Notifies the listener that a term has been loaded and begins the loading of the next term in the loading order if appropriate
+     * Notifies the listener that a term has been loaded and begins the loading of the next term in the loading order if appropriate.
+     * This method uses taskId to allow only ClassLists result from the most recent call of readAllTerms to have an effect
      * @param classList The ClassList object that was created
      */
     @Override
     public void onClassesRead(ClassList classList) {
-        if(classList.getStudentOid() != null && !classList.getStudentOid().equals(studentOid)) return;
+        if(classList.getTaskId() != taskId) return;
         for(ClassesListener cl : listeners) cl.onClassesRead(classList);
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;
-        else if(continueLoading) ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
+        else if(continueLoading) ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies, taskId);
     }
 
     /**
@@ -113,7 +120,7 @@ public class TermLoader implements ClassesListener {
     public void resumeIfNecessary(){
         if(!done && !continueLoading) {
             continueLoading = true;
-            ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies);
+            ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies, taskId);
         }
     }
 

@@ -10,6 +10,12 @@
         android:visible="false"/>
 
     <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/baseline_refresh_white_48dp"
+        android:title="@string/action_refresh"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_logout"
         android:icon="@drawable/baseline_exit_to_app_white_48dp"
         android:title="@string/action_logout"

@@ -50,6 +50,11 @@ public class ClassList extends ArrayList<SchoolClass> {
     private int term;
 
     /**
+     * An number that can be used to identify which call of readClasses this list resulted from
+     */
+    private int taskId;
+
+    /**
      * The token read from the classes page
      */
     private String token;
@@ -70,17 +75,19 @@ public class ClassList extends ArrayList<SchoolClass> {
     private AspenTaskStatus status;
 
     /**
-     * Creates a new ClassList object. The students HashMap should be null unless a parent account is being used.
+     * Creates a new ClassList object
      * @param term The term the classes were read from
      * @param token The token read from the classes page
      * @param studentOid The student OID (can be null)
      * @param status The result of attempting to read data
+     * @param taskId An identifier for this ClassList
      */
-    private ClassList(int term, String token, String studentOid, AspenTaskStatus status){
+    private ClassList(int term, String token, String studentOid, AspenTaskStatus status, int taskId){
         this.term = term;
         this.token = token;
         this.studentOid = studentOid;
         this.status = status;
+        this.taskId = taskId;
     }
 
     /**
@@ -90,9 +97,14 @@ public class ClassList extends ArrayList<SchoolClass> {
      * @param term The term to read classes from
      * @param studentOid The student OID
      * @param cookies The cookies from LoginManager
+     * @param taskId An integer ID to associate this call of readClasses with a resulting call of onClassesRead
      */
-    public static void readClasses(ClassesListener listener, int term, String studentOid, Cookies cookies){
-        new ReadClassesTask(listener, term, studentOid).execute(cookies);
+    public static void readClasses(ClassesListener listener, int term, String studentOid, Cookies cookies, int taskId) {
+        new ReadClassesTask(listener, term, studentOid, taskId).execute(cookies);
+    }
+
+    public int getTaskId(){
+        return taskId;
     }
 
     public int getTerm(){
@@ -135,6 +147,11 @@ public class ClassList extends ArrayList<SchoolClass> {
         private String studentOid;
 
         /**
+         * An identifier for the result of this task
+         */
+        private int taskId;
+
+        /**
          * The listener to be notified when the classes are read
          */
         private ClassesListener listener;
@@ -145,10 +162,11 @@ public class ClassList extends ArrayList<SchoolClass> {
          * @param term The term
          * @param studentOid The student OID (if needed)
          */
-        private ReadClassesTask(ClassesListener listener, int term, String studentOid){
+        private ReadClassesTask(ClassesListener listener, int term, String studentOid, int taskId){
             this.listener = listener;
             this.term = term;
             this.studentOid = studentOid;
+            this.taskId = taskId;
         }
 
         @Override
@@ -157,7 +175,7 @@ public class ClassList extends ArrayList<SchoolClass> {
             try{
                 doc = new TermSelector().selectTerm(cookies[0], term, studentOid);
             }catch (IOException e){
-                return new ClassList(term, null, studentOid, ASPEN_UNAVAILABLE);
+                return new ClassList(term, null, studentOid, ASPEN_UNAVAILABLE, taskId);
             }
 
             try {
@@ -167,12 +185,12 @@ public class ClassList extends ArrayList<SchoolClass> {
                 return makeClassList(token, studentSelect, tbody);
             }
             catch(IndexOutOfBoundsException | NumberFormatException e){
-                return new ClassList(term, null, studentOid, PARSING_ERROR);
+                return new ClassList(term, null, studentOid, PARSING_ERROR, taskId);
             }
         }
 
         private ClassList makeClassList(String token, Element studentSelect, Element tbody){
-            ClassList classes = new ClassList(term, token, studentOid, SUCCESSFUL);
+            ClassList classes = new ClassList(term, token, studentOid, SUCCESSFUL, taskId);
             if(studentSelect != null){
                 HashMap<String, String> students = new HashMap<>();
                 for(int i = 0; i < studentSelect.children().size(); i++){

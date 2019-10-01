@@ -25,7 +25,7 @@ public class AssignmentList extends ArrayList<Assignment> {
     /**
      * Fills this AssignmentList with assignments from the selected class and all terms applicable to that class. his may not include
      * all assignments in the term depending on how many assignments are set to be shown in Aspen's settings. This method should only be
-     * called from within and AsyncTask
+     * called from within an AsyncTask
      * @param cookies The cookies from LoginManager
      * @param classesToken The token from ClassList
      * @return This AssignmentList object

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.NO_DATA;
 import static com.aspengrades.data.AspenTaskStatus.PARSING_ERROR;
+import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 
 /**
@@ -175,6 +176,11 @@ public class ClassList extends ArrayList<SchoolClass> {
             try{
                 doc = new TermSelector().selectTerm(cookies[0], term, studentOid);
             }catch (IOException e){
+                e.printStackTrace();
+                if(e.getClass().getName().equals("org.jsoup.HttpStatusException")) {
+                    System.out.println("Registered as session expired");
+                    return new ClassList(term, null, studentOid, SESSION_EXPIRED, taskId);
+                }
                 return new ClassList(term, null, studentOid, ASPEN_UNAVAILABLE, taskId);
             }
 

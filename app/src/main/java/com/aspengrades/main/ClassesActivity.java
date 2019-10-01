@@ -21,13 +21,16 @@ import com.aspengrades.util.AlertUtil;
 
 import java.util.HashMap;
 
+import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
+
 public class ClassesActivity extends AppCompatActivity implements LoginListener, ClassesListener, AlertUtil.StudentSelectorCallback {
 
     private Cookies cookies;
     private ViewPager pager;
-    private MenuItem selectStudentItem;
+    private MenuItem selectStudentItem, refreshItem;
     private TermPagerAdapter adapter;
     private TermLoader termLoader;
+
     private int favTerm;
     private String studentOid;
     private HashMap<String, String> students;
@@ -56,9 +59,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
             String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
             String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
             cookies = new Cookies(keys, values);
-            termLoader = new TermLoader(cookies);
-            termLoader.addClassesListener(adapter);
-            termLoader.addClassesListener(this);
+            termLoader = new TermLoader(this, cookies);
             termLoader.readAllTerms(favTerm);
         }
         else{
@@ -74,9 +75,10 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
         if(isParentAccount) {
             selectStudentItem = menu.findItem(R.id.action_switch_student);
             selectStudentItem.setVisible(true);
-            selectStudentItem.setEnabled(false);
-            selectStudentItem.getIcon().mutate().setAlpha(130);
+            setEnabled(selectStudentItem, false);
         }
+        refreshItem = menu.findItem(R.id.action_refresh);
+        setEnabled(refreshItem, false);
         return true;
     }
 
@@ -93,6 +95,12 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
             AlertUtil.showStudentSelector(this, this, students, studentOid);
             return true;
         }
+        else if(item.getItemId() == R.id.action_refresh){
+            if(termLoader == null) return false;
+            adapter.reset();
+            termLoader.readAllTerms(pager.getCurrentItem() + 1, studentOid);
+            return true;
+        }
         else return super.onOptionsItemSelected(item);
     }
 
@@ -101,7 +109,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
         if(!studentOid.equals(this.studentOid)) {
             this.studentOid = studentOid;
             adapter.reset();
-            termLoader.readAllTerms(favTerm, studentOid);
+            termLoader.readAllTerms(pager.getCurrentItem() + 1, studentOid);
         }
     }
 
@@ -127,11 +135,10 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     @Override
     public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount) {
+        System.out.println("User logged in");
         this.cookies = cookies;
-        termLoader = new TermLoader(cookies);
-        termLoader.addClassesListener(adapter);
-        termLoader.addClassesListener(this);
-        termLoader.readAllTerms(favTerm);
+        termLoader = new TermLoader(this, cookies);
+        termLoader.readAllTerms(favTerm, studentOid);
     }
 
     @Override
@@ -146,14 +153,22 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     @Override
     public void onClassesRead(ClassList classList) {
+        if(classList.getStatus() == SESSION_EXPIRED) {
+            termLoader.pause();
+            SharedPreferences sharedPreferences = getSharedPreferences(
+                    getString(R.string.credentials_file_key),
+                    Context.MODE_PRIVATE);
+            String username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
+            String password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
+            LoginManager.attemptLogin(this, username, password);
+        }
+        else adapter.onClassesRead(classList);
         this.studentOid = classList.getStudentOid();
         this.students = classList.getStudents();
         if(studentOid == null && students != null)
             studentOid = students.values().toArray(new String[1])[0];
-        if(selectStudentItem != null && !selectStudentItem.isEnabled()){
-            selectStudentItem.setEnabled(true);
-            selectStudentItem.getIcon().setAlpha(255);
-        }
+        if(selectStudentItem != null && !selectStudentItem.isEnabled()) setEnabled(selectStudentItem, true);
+        if(refreshItem != null && !refreshItem.isEnabled()) setEnabled(refreshItem, true);
     }
 
     private int readFavTerm(){
@@ -172,6 +187,11 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(getString(R.string.extra_main_activity_relaunch), true);
         startActivity(intent);
+    }
+
+    private void setEnabled(MenuItem item, boolean enabled){
+        item.setEnabled(enabled);
+        item.getIcon().setAlpha(enabled ? 255 : 130);
     }
 
     public TermLoader getTermLoader(){

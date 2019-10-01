@@ -1,7 +1,5 @@
 package com.aspengrades.data;
 
-import java.util.ArrayList;
-
 /**
  * Manages the loading of all terms in a specific order
  */
@@ -10,7 +8,7 @@ public class TermLoader implements ClassesListener {
     /**
      * The listener to notify when the ClassList for a certain term has been loaded
      */
-    private ArrayList<ClassesListener> listeners;
+    private ClassesListener listener;
 
     /**
      * The cookies from LoginManager
@@ -51,20 +49,12 @@ public class TermLoader implements ClassesListener {
      * Creates a new TermLoader
      * @param cookies The cookies from LoginManager
      */
-    public TermLoader(Cookies cookies){
+    public TermLoader(ClassesListener listener, Cookies cookies){
+        this.listener = listener;
         this.cookies = cookies;
-        listeners = new ArrayList<>();
         continueLoading = true;
         done = false;
         loadingIndex = 0;
-    }
-
-    /**
-     * Adds a listener to be notified when a class list is loaded.
-     * @param listener The listener to notify
-     */
-    public void addClassesListener(ClassesListener listener){
-        listeners.add(listener);
     }
 
     /**
@@ -101,7 +91,7 @@ public class TermLoader implements ClassesListener {
     @Override
     public void onClassesRead(ClassList classList) {
         if(classList.getTaskId() != taskId) return;
-        for(ClassesListener cl : listeners) cl.onClassesRead(classList);
+        listener.onClassesRead(classList);
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;
         else if(continueLoading) ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies, taskId);

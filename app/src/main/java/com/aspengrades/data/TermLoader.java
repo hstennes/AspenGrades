@@ -85,23 +85,36 @@ public class TermLoader implements ClassesListener {
 
     /**
      * Notifies the listener that a term has been loaded and begins the loading of the next term in the loading order if appropriate.
-     * This method uses taskId to allow only ClassLists result from the most recent call of readAllTerms to have an effect
+     * This method uses taskId to allow only ClassLists resulting from the most recent call of readAllTerms to have an effect. The
+     * listener being notified can call pause() or finish() to prevent another term from being loaded even though this term is
+     * complete.
      * @param classList The ClassList object that was created
      */
     @Override
     public void onClassesRead(ClassList classList) {
         if(classList.getTaskId() != taskId) return;
         listener.onClassesRead(classList);
+        if(done) return;
+
         loadingIndex++;
         if(loadingIndex >= loadingOrder.length) done = true;
         else if(continueLoading) ClassList.readClasses(this, loadingOrder[loadingIndex], studentOid, cookies, taskId);
     }
 
     /**
-     * Prevents this TermLoader from beginning the loading of another term after the term currently being loaded is complete
+     * Prevents this TermLoader from beginning the loading of another term after the term currently being loaded is complete.  The
+     * loading can then be resumed with resumeIfNecessary()
      */
     public void pause(){
         continueLoading = false;
+    }
+
+    /**
+     * Prevents this TermLoader from beginning the loading of another term after the term being loaded is complete.  Unlike with
+     * pause(), the loading cannot be resumed with resumeIfNecessary()
+     */
+    public void finish(){
+        done = true;
     }
 
     /**

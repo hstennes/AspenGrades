@@ -135,7 +135,6 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     @Override
     public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount) {
-        System.out.println("User logged in");
         this.cookies = cookies;
         termLoader = new TermLoader(this, cookies);
         termLoader.readAllTerms(favTerm, studentOid);
@@ -154,10 +153,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
     @Override
     public void onClassesRead(ClassList classList) {
         if(classList.getStatus() == SESSION_EXPIRED) {
-            termLoader.pause();
-            SharedPreferences sharedPreferences = getSharedPreferences(
-                    getString(R.string.credentials_file_key),
-                    Context.MODE_PRIVATE);
+            termLoader.finish();
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials_file_key), Context.MODE_PRIVATE);
             String username = sharedPreferences.getString(getString(R.string.saved_username_key), "");
             String password = sharedPreferences.getString(getString(R.string.saved_password_key), "");
             LoginManager.attemptLogin(this, username, password);

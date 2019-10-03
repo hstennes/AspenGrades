@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.aspengrades.data.ClassList;
 import com.aspengrades.data.ClassesListener;
@@ -67,6 +68,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
             String password = intent.getStringExtra(getString(R.string.saved_password_key));
             LoginManager.attemptLogin(this, username, password);
         }
+        Toast.makeText(this, "Finished onCreate method", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -135,6 +137,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     @Override
     public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount) {
+        Toast.makeText(this, "Logged in, " + studentOid, Toast.LENGTH_SHORT).show();
         this.cookies = cookies;
         termLoader = new TermLoader(this, cookies);
         termLoader.readAllTerms(favTerm, studentOid);
@@ -152,6 +155,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     @Override
     public void onClassesRead(ClassList classList) {
+        Toast.makeText(this, "Loaded term " + classList.getTerm(), Toast.LENGTH_SHORT).show();
         if(classList.getStatus() == SESSION_EXPIRED) {
             termLoader.finish();
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials_file_key), Context.MODE_PRIVATE);

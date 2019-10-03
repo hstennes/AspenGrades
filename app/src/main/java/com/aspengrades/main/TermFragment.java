@@ -42,6 +42,8 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             if(classList.getStatus() == SUCCESSFUL) setupClassList(view);
             else showStatusMessage(view);
         }
+        idMap = new HashMap<>();
+        nameMap = new HashMap<>();
         return view;
     }
 

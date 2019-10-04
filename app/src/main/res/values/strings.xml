@@ -31,4 +31,5 @@
     <string name="saved_fav_term_key">term</string>
     <string name="alert_title_session_expired">Session expired</string>
     <string name="alert_text_session_expired">"Your Aspen session has expired. Reload classes?"</string>
+    <string name="description_logo">logo</string>
 </resources>

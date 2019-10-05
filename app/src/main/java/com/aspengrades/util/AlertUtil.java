@@ -16,6 +16,7 @@ public class AlertUtil {
      * @param activity The activity showing the dialog
      */
     public static void showSessionExpiredAlert(final Activity activity, final SessionExpiredCallback callback){
+        if(activity.isFinishing()) return;
         new AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.alert_title_session_expired))
                 .setMessage(activity.getString(R.string.alert_text_session_expired))
@@ -41,6 +42,7 @@ public class AlertUtil {
      */
     public static void showStudentSelector(Activity activity, final StudentSelectorCallback callback,
                                            final HashMap<String, String> students, String studentOid){
+        if(activity.isFinishing()) return;
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Student");
         builder.setSingleChoiceItems(students.keySet().toArray(new String[1]),

@@ -86,7 +86,7 @@ public class LoginManager {
                 String headerText = doc.getElementById("header").text();
                 boolean isParentAccount = headerText.contains(PARENT_ACCOUNT_KEYWORD);
                 String[] headerStrs = headerText.split(" ");
-                for(int i = 0; i < headerStrs.length; i++){
+                for(int i = 0; i < headerStrs.length - 1; i++){
                     if(headerStrs[i].contains(",")) name = headerStrs[i] + " " + headerStrs[i + 1];
                 }
 

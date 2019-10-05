@@ -164,8 +164,10 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
         this.students = classList.getStudents();
         if(studentOid == null && students != null)
             studentOid = students.values().toArray(new String[1])[0];
-        if(selectStudentItem != null && !selectStudentItem.isEnabled()) setEnabled(selectStudentItem, true);
-        if(refreshItem != null && !refreshItem.isEnabled()) setEnabled(refreshItem, true);
+        if(selectStudentItem != null && !selectStudentItem.isEnabled() && students != null)
+            setEnabled(selectStudentItem, true);
+        if(refreshItem != null && !refreshItem.isEnabled())
+            setEnabled(refreshItem, true);
     }
 
     private int readFavTerm(){

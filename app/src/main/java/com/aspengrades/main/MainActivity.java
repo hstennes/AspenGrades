@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
             @Override
             public void onClick(View v) {
                 findViewById(R.id.text_error).setVisibility(View.INVISIBLE);
-                String username = ((EditText) findViewById(R.id.edit_username)).getText().toString();
-                String password = ((EditText) findViewById(R.id.edit_password)).getText().toString();
+                String username = ((EditText) findViewById(R.id.edit_username)).getText().toString().trim();
+                String password = ((EditText) findViewById(R.id.edit_password)).getText().toString().trim();
                 buttonLogin.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
                 LoginManager.attemptLogin(MainActivity.this, username, password);

@@ -196,17 +196,10 @@ public class ClassList extends ArrayList<SchoolClass> {
             ClassList classes = new ClassList(term, token, studentOid, SUCCESSFUL, taskId);
             if(studentSelect != null){
                 StudentList students = new StudentList();
-                /*
                 for(int i = 0; i < studentSelect.children().size(); i++){
                     Element studentData = studentSelect.child(i);
                     students.addStudent(studentData.text(), studentData.attr("value"));
                 }
-                */
-
-                students.addStudent("Bob", "1");
-                students.addStudent("Rob", "2");
-                students.addStudent("Joe", "3");
-                students.addStudent("Lol", "4");
                 classes.students = students;
             }
 

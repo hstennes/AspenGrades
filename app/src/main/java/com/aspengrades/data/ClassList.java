@@ -7,7 +7,6 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.aspengrades.data.AspenTaskStatus.ASPEN_UNAVAILABLE;
 import static com.aspengrades.data.AspenTaskStatus.NO_DATA;
@@ -68,7 +67,7 @@ public class ClassList extends ArrayList<SchoolClass> {
     /**
      * Maps the names of available students to their student IDs if the user is on a parent account
      */
-    private HashMap<String, String> students;
+    private StudentList students;
 
     /**
      * The result of the attempt to read the classes
@@ -116,7 +115,7 @@ public class ClassList extends ArrayList<SchoolClass> {
         return token;
     }
 
-    public HashMap<String, String> getStudents(){
+    public StudentList getStudents(){
         return students;
     }
 
@@ -177,10 +176,8 @@ public class ClassList extends ArrayList<SchoolClass> {
                 doc = new TermSelector().selectTerm(cookies[0], term, studentOid);
             }catch (IOException e){
                 e.printStackTrace();
-                if(e.getClass().getName().equals("org.jsoup.HttpStatusException")) {
-                    System.out.println("Registered as session expired");
+                if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
                     return new ClassList(term, null, studentOid, SESSION_EXPIRED, taskId);
-                }
                 return new ClassList(term, null, studentOid, ASPEN_UNAVAILABLE, taskId);
             }
 
@@ -198,11 +195,18 @@ public class ClassList extends ArrayList<SchoolClass> {
         private ClassList makeClassList(String token, Element studentSelect, Element tbody){
             ClassList classes = new ClassList(term, token, studentOid, SUCCESSFUL, taskId);
             if(studentSelect != null){
-                HashMap<String, String> students = new HashMap<>();
+                StudentList students = new StudentList();
+                /*
                 for(int i = 0; i < studentSelect.children().size(); i++){
                     Element studentData = studentSelect.child(i);
-                    students.put(studentData.text(), studentData.attr("value"));
+                    students.addStudent(studentData.text(), studentData.attr("value"));
                 }
+                */
+
+                students.addStudent("Bob", "1");
+                students.addStudent("Rob", "2");
+                students.addStudent("Joe", "3");
+                students.addStudent("Lol", "4");
                 classes.students = students;
             }
 

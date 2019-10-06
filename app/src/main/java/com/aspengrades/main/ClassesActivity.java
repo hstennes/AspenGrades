@@ -16,10 +16,9 @@ import com.aspengrades.data.ClassesListener;
 import com.aspengrades.data.Cookies;
 import com.aspengrades.data.LoginListener;
 import com.aspengrades.data.LoginManager;
+import com.aspengrades.data.StudentList;
 import com.aspengrades.data.TermLoader;
 import com.aspengrades.util.AlertUtil;
-
-import java.util.HashMap;
 
 import static com.aspengrades.data.AspenTaskStatus.SESSION_EXPIRED;
 
@@ -33,7 +32,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     private int favTerm;
     private String studentOid;
-    private HashMap<String, String> students;
+    private StudentList students;
     private boolean isParentAccount;
 
     @Override
@@ -162,8 +161,8 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
         else adapter.onClassesRead(classList);
         this.studentOid = classList.getStudentOid();
         this.students = classList.getStudents();
-        if(studentOid == null && students != null)
-            studentOid = students.values().toArray(new String[1])[0];
+        if(studentOid == null && students != null && !students.isEmpty())
+            studentOid = students.getIds().get(0);
         if(selectStudentItem != null && !selectStudentItem.isEnabled() && students != null)
             setEnabled(selectStudentItem, true);
         if(refreshItem != null && !refreshItem.isEnabled())

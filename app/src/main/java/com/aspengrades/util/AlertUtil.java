@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
+import com.aspengrades.data.StudentList;
 import com.aspengrades.main.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class AlertUtil {
 
@@ -41,15 +41,16 @@ public class AlertUtil {
      * @param studentOid The student OID of the student currently being shown
      */
     public static void showStudentSelector(Activity activity, final StudentSelectorCallback callback,
-                                           final HashMap<String, String> students, String studentOid){
+                                           final StudentList students, String studentOid){
         if(activity.isFinishing()) return;
+
+        String[] names = students.getNames().toArray(new String[1]);
+        final ArrayList<String> ids = students.getIds();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Student");
-        builder.setSingleChoiceItems(students.keySet().toArray(new String[1]),
-                new ArrayList<>(students.values()).indexOf(studentOid),
-                new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(names, ids.indexOf(studentOid), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                callback.onStudentSelected(students.values().toArray(new String[1])[item]);
+                callback.onStudentSelected(ids.get(item));
                 dialog.dismiss();
             }
         });

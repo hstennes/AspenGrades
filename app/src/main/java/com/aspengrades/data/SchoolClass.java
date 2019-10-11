@@ -40,7 +40,7 @@ public class SchoolClass {
         description = row.child(descriptionIndex).text();
         String gradeString = row.child(gradeIndex).text();
         try {
-            termGrade = Float.parseFloat(gradeString);
+            termGrade = Float.parseFloat(gradeString.replaceAll("[^\\d.]", ""));
         } catch (NumberFormatException e){
             termGrade = BLANK_GRADE;
         }

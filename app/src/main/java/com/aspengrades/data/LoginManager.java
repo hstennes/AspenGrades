@@ -23,6 +23,11 @@ public class LoginManager {
     private static final String LOGIN_URL = "https://aspen.cps.edu/aspen/logon.do";
 
     /**
+     * The URL of the home page in CPS Aspen
+     */
+    private static final String HOME_PAGE_URL = "https://aspen.cps.edu/aspen/home.do";
+
+    /**
      * The default name for the user when the name cannot be found
      */
     public static final String DEFAULT_NAME = "GradeLeaf";
@@ -79,10 +84,7 @@ public class LoginManager {
                         .method(Connection.Method.GET)
                         .timeout(TIMEOUT)
                         .execute();
-                attemptLogin(loginForm, params[0], params[1]);
-                Document doc = Jsoup.connect("https://aspen.cps.edu/aspen/home.do")
-                        .cookies(loginForm.cookies())
-                        .get();
+                Document doc = attemptLogin(loginForm, params[0], params[1]);
 
                 if(!doc.title().equals("Aspen"))
                     return new LoginResult(null, INVALID_CREDENTIALS, name, false);
@@ -100,7 +102,7 @@ public class LoginManager {
             }
         }
 
-        private void attemptLogin(Connection.Response loginForm, String username, String password) throws IOException{
+        private Document attemptLogin(Connection.Response loginForm, String username, String password) throws IOException{
             String loginToken = loginForm.parse()
                     .select("input[name=org.apache.struts.taglib.html.TOKEN]")
                     .attr("value");
@@ -113,6 +115,9 @@ public class LoginManager {
                     .data("mobile", "false")
                     .cookies(loginForm.cookies())
                     .post();
+            return Jsoup.connect(HOME_PAGE_URL)
+                    .cookies(loginForm.cookies())
+                    .get();
         }
 
         @Override

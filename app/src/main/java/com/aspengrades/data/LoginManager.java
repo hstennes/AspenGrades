@@ -79,7 +79,10 @@ public class LoginManager {
                         .method(Connection.Method.GET)
                         .timeout(TIMEOUT)
                         .execute();
-                Document doc = attemptLogin(loginForm, params[0], params[1]);
+                attemptLogin(loginForm, params[0], params[1]);
+                Document doc = Jsoup.connect("https://aspen.cps.edu/aspen/home.do")
+                        .cookies(loginForm.cookies())
+                        .get();
 
                 if(!doc.title().equals("Aspen"))
                     return new LoginResult(null, INVALID_CREDENTIALS, name, false);
@@ -97,16 +100,17 @@ public class LoginManager {
             }
         }
 
-        private Document attemptLogin(Connection.Response loginForm, String username, String password) throws IOException{
+        private void attemptLogin(Connection.Response loginForm, String username, String password) throws IOException{
             String loginToken = loginForm.parse()
                     .select("input[name=org.apache.struts.taglib.html.TOKEN]")
                     .attr("value");
-            return Jsoup.connect(LOGIN_URL)
+            Jsoup.connect(LOGIN_URL)
                     .data("org.apache.struts.taglib.html.TOKEN", loginToken)
                     .data("userEvent", LOGIN_FORM_EVENT)
                     .data("deploymentId", "aspen")
                     .data("username", username)
                     .data("password", password)
+                    .data("mobile", "false")
                     .cookies(loginForm.cookies())
                     .post();
         }

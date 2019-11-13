@@ -15,9 +15,9 @@ public class Category {
     private String name;
 
     /**
-     * The weight of the category in calculating the overall grade, expressed as a percent
+     * The weight of the category in calculating the overall grade, taken directly from the text on the Details page
      */
-    private float weight;
+    private String weight;
 
     /**
      * The student's grade in the category
@@ -31,8 +31,7 @@ public class Category {
      */
     public Category(Element nameRow, Element gradeRow){
         name = nameRow.child(0).text();
-        String weightString = nameRow.child(2).text();
-        weight = Float.parseFloat(weightString.substring(0, weightString.length() - 1));
+        weight = nameRow.child(2).text();
 
         String gradeString = gradeRow.child(1).text();
         grade = SchoolClass.BLANK_GRADE;
@@ -43,7 +42,7 @@ public class Category {
         return name;
     }
 
-    public float getWeight() {
+    public String getWeight() {
         return weight;
     }
 

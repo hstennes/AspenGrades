@@ -44,7 +44,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         holder.textCategory.setText(category.getName());
         holder.textCategoryGrade.setText(category.getGrade() == -1 ? "" : Float.toString(category.getGrade()));
-        holder.textWeight.setText(context.getString(R.string.text_weight, Float.toString(category.getWeight())));
+        holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
         holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
 
         if(assignments.size() != 0) holder.textNoAssignments.setVisibility(View.GONE);

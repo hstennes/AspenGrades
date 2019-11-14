@@ -85,9 +85,9 @@ public class LoginManager {
                         .timeout(TIMEOUT)
                         .execute();
                 Document doc = attemptLogin(loginForm, params[0], params[1]);
-
-                if(!doc.title().equals("Aspen"))
+                if(doc == null)
                     return new LoginResult(null, INVALID_CREDENTIALS, name, false);
+
                 String headerText = doc.getElementById("header").text();
                 boolean isParentAccount = headerText.contains(PARENT_ACCOUNT_KEYWORD);
                 String[] headerStrs = headerText.split(" ");
@@ -106,7 +106,7 @@ public class LoginManager {
             String loginToken = loginForm.parse()
                     .select("input[name=org.apache.struts.taglib.html.TOKEN]")
                     .attr("value");
-            Jsoup.connect(LOGIN_URL)
+            Document doc = Jsoup.connect(LOGIN_URL)
                     .data("org.apache.struts.taglib.html.TOKEN", loginToken)
                     .data("userEvent", LOGIN_FORM_EVENT)
                     .data("deploymentId", "aspen")
@@ -115,6 +115,7 @@ public class LoginManager {
                     .data("mobile", "false")
                     .cookies(loginForm.cookies())
                     .post();
+            if(!doc.title().equals("Aspen")) return null;
             return Jsoup.connect(HOME_PAGE_URL)
                     .cookies(loginForm.cookies())
                     .get();

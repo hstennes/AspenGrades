@@ -85,8 +85,7 @@ public class LoginManager {
                         .timeout(TIMEOUT)
                         .execute();
                 Document doc = attemptLogin(loginForm, params[0], params[1]);
-                if(doc == null)
-                    return new LoginResult(null, INVALID_CREDENTIALS, name, false);
+                if(doc == null) return new LoginResult(null, INVALID_CREDENTIALS, name, false);
 
                 String headerText = doc.getElementById("header").text();
                 boolean isParentAccount = headerText.contains(PARENT_ACCOUNT_KEYWORD);
@@ -94,7 +93,6 @@ public class LoginManager {
                 for(int i = 0; i < headerStrs.length - 1; i++){
                     if(headerStrs[i].contains(",")) name = headerStrs[i] + " " + headerStrs[i + 1];
                 }
-
                 return new LoginResult(new Cookies(loginForm.cookies()), SUCCESSFUL, name, isParentAccount);
             }catch (IOException | IndexOutOfBoundsException e){
                 e.printStackTrace();
@@ -129,6 +127,10 @@ public class LoginManager {
         }
     }
 
+    /**
+     * Holds all information that results from a login attempt, which includes cookies, the status of the attempt, the name of the
+     * user, and a boolean telling whether it is a parent account
+     */
     private static class LoginResult{
         public Cookies cookies;
         public AspenTaskStatus status;

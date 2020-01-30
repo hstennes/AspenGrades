@@ -23,7 +23,7 @@ public class TermSelector {
      */
     public Document selectTerm(Cookies cookies, int term, String studentOid) throws IOException {
         Document doc = Jsoup.connect(ClassList.CLASSES_URL).timeout(TIMEOUT).cookies(cookies.getCookieMap()).get();
-        if(term != 0){
+        if(term >= 0 && term <= ClassList.NUM_TERMS){
             Connection connection = Jsoup.connect(ClassList.CLASSES_URL)
                     .data("org.apache.struts.taglib.html.TOKEN", getToken(doc))
                     .data("userEvent", ClassList.TERM_SELECT_EVENT)

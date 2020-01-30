@@ -187,7 +187,7 @@ public class ClassList extends ArrayList<SchoolClass> {
                 Element tbody = doc.getElementById("dataGrid").child(0).child(0);
                 return makeClassList(token, studentSelect, tbody);
             }
-            catch(IndexOutOfBoundsException | NumberFormatException e){
+            catch(NullPointerException | IndexOutOfBoundsException | NumberFormatException e){
                 return new ClassList(term, null, studentOid, PARSING_ERROR, taskId);
             }
         }

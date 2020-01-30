@@ -34,7 +34,7 @@ public class CategoryList extends ArrayList<Category> {
     public CategoryList readCategories(Cookies cookies, String classId, String token) throws IOException{
         Document doc;
         doc = getDoc(cookies, classId, token);
-        Element tbody = doc.getElementsByClass("listGridFixed").get(1).child(0).child(0);
+        Element tbody = doc.select("tbody:contains(Category)").last();
         for(int i = STARTING_ROWS; i < tbody.children().size() - ENDING_ROWS; i += 2){
             add(new Category(tbody.children().get(i), tbody.children().get(i + 1)));
         }

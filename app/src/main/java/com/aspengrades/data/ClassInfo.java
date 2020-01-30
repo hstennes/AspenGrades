@@ -137,7 +137,7 @@ public class ClassInfo {
                 if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
                     return new ClassInfo(null, null, SESSION_EXPIRED);
                 return new ClassInfo(null, null, ASPEN_UNAVAILABLE);
-            }catch (IndexOutOfBoundsException | NumberFormatException e){
+            }catch (IllegalArgumentException | IndexOutOfBoundsException e){
                 e.printStackTrace();
                 return new ClassInfo(null, null, PARSING_ERROR);
             }

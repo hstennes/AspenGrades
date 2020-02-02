@@ -1,9 +1,9 @@
 package com.aspengrades.main;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -18,7 +18,7 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
     private FragmentManager fm;
 
     public TermPagerAdapter(FragmentManager fm, ClassesActivity classesActivity) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.fm = fm;
         this.classesActivity = classesActivity;
         fragmentTags = new SparseArray<>();
@@ -26,6 +26,7 @@ public class TermPagerAdapter extends FragmentPagerAdapter implements ClassesLis
     }
 
     @Override
+    @NonNull
     public Fragment getItem(int i) {
         return new TermFragment();
     }

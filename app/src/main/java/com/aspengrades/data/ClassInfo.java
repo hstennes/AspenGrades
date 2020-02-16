@@ -15,7 +15,7 @@ import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
 public class ClassInfo {
 
     /**
-     * The list of Categories in the class
+     * The list of Categories in the class. Also contains the cumulative grade from the categories page.
      */
     private CategoryList cList;
 

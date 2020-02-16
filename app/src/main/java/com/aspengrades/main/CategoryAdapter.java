@@ -15,7 +15,10 @@ import com.aspengrades.data.Assignment;
 import com.aspengrades.data.AssignmentList;
 import com.aspengrades.data.Category;
 import com.aspengrades.data.ClassInfo;
+import com.aspengrades.data.SchoolClass;
 import com.aspengrades.util.ColorUtil;
+
+import java.util.Locale;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
@@ -41,14 +44,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.layoutAssignments.removeAllViews();
         Category category = classInfo.getCategoryList().get(i);
         AssignmentList assignments = classInfo.fromCategory(category.getName());
-
         holder.textCategory.setText(category.getName());
-        holder.textCategoryGrade.setText(category.getGrade() == -1 ? "" : Float.toString(category.getGrade()));
-        holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
+        holder.textCategoryGrade.setText(category.getGrade() == SchoolClass.BLANK_GRADE ? "" : Float.toString(category.getGrade()));
         holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
-
+        if(category.isCumulative()){
+            holder.layoutDetails.setVisibility(View.GONE);
+            return;
+        }
+        holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
         if(assignments.size() != 0) holder.textNoAssignments.setVisibility(View.GONE);
         LayoutInflater inflater = LayoutInflater.from(context);
+
         for(Assignment assignment : assignments){
             View assignmentView = inflater.inflate(R.layout.assignment, holder.layoutAssignments, false);
             TextView textAssignment = assignmentView.findViewById(R.id.text_assignment);
@@ -89,7 +95,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         TextView textCategory, textWeight, textCategoryGrade, textNoAssignments;
         RelativeLayout layoutHeader;
-        LinearLayout layoutAssignments;
+        LinearLayout layoutAssignments, layoutDetails;
 
         public CategoryHolder(@NonNull View view) {
             super(view);
@@ -99,6 +105,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             textNoAssignments = view.findViewById(R.id.text_no_assignments);
             layoutHeader = view.findViewById(R.id.layout_header);
             layoutAssignments = view.findViewById(R.id.layout_assignments);
+            layoutDetails = view.findViewById(R.id.layout_details);
         }
     }
 }

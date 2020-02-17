@@ -19,6 +19,7 @@ import com.aspengrades.data.SchoolClass;
 import com.aspengrades.util.ColorUtil;
 
 import java.util.Locale;
+import java.util.zip.Inflater;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
@@ -43,7 +44,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryHolder holder, int i) {
         holder.layoutAssignments.removeAllViews();
         Category category = classInfo.getCategoryList().get(i);
-        AssignmentList assignments = classInfo.fromCategory(category.getName());
         holder.textCategory.setText(category.getName());
         holder.textCategoryGrade.setText(category.getGrade() == SchoolClass.BLANK_GRADE ? "" : Float.toString(category.getGrade()));
         holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
@@ -52,17 +52,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             return;
         }
         holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
+        AssignmentList assignments = classInfo.fromCategory(category.getName());
         if(assignments.size() != 0) holder.textNoAssignments.setVisibility(View.GONE);
+        else return;
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        for(Assignment assignment : assignments){
-            View assignmentView = inflater.inflate(R.layout.assignment, holder.layoutAssignments, false);
-            TextView textAssignment = assignmentView.findViewById(R.id.text_assignment);
-            textAssignment.setText(assignment.getName());
-            TextView textGrade = assignmentView.findViewById(R.id.text_assignment_grade);
-            textGrade.setText(getGradeText(assignment.getScore()));
-            holder.layoutAssignments.addView(assignmentView);
-        }
+        for(Assignment assignment : assignments) setupAssignment(assignment, holder, inflater);
     }
 
     @Override
@@ -73,6 +67,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void toggleViewType(){
         percentMode = !percentMode;
         notifyDataSetChanged();
+    }
+
+    private void setupAssignment(Assignment assignment, CategoryHolder holder, LayoutInflater inflater){
+        View assignmentView = inflater.inflate(R.layout.assignment, holder.layoutAssignments, false);
+        TextView textAssignment = assignmentView.findViewById(R.id.text_assignment);
+        textAssignment.setText(assignment.getName());
+        TextView textGrade = assignmentView.findViewById(R.id.text_assignment_grade);
+        textGrade.setText(getGradeText(assignment.getScore()));
+        holder.layoutAssignments.addView(assignmentView);
     }
 
     private String getGradeText(String scoreText){

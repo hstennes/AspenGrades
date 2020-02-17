@@ -1,11 +1,6 @@
 package com.aspengrades.data;
 
-import android.content.Context;
-import android.content.res.Resources;
-
 import androidx.annotation.NonNull;
-
-import com.aspengrades.main.R;
 
 import org.jsoup.nodes.Element;
 

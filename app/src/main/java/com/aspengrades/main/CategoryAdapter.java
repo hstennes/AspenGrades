@@ -18,9 +18,6 @@ import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.SchoolClass;
 import com.aspengrades.util.ColorUtil;
 
-import java.util.Locale;
-import java.util.zip.Inflater;
-
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
 
     private ClassInfo classInfo;
@@ -42,19 +39,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryHolder holder, int i) {
-        holder.layoutAssignments.removeAllViews();
+        initializeLayout(holder);
         Category category = classInfo.getCategoryList().get(i);
         holder.textCategory.setText(category.getName());
         holder.textCategoryGrade.setText(category.getGrade() == SchoolClass.BLANK_GRADE ? "" : Float.toString(category.getGrade()));
         holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
-        if(category.isCumulative()){
-            holder.layoutDetails.setVisibility(View.GONE);
-            return;
-        }
+        if(category.isCumulative()) return;
+
+        holder.layoutDetails.setVisibility(View.VISIBLE);
         holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
         AssignmentList assignments = classInfo.fromCategory(category.getName());
-        if(assignments.size() != 0) holder.textNoAssignments.setVisibility(View.GONE);
-        else return;
+        if(assignments.size() == 0) return;
+
+        holder.textNoAssignments.setVisibility(View.GONE);
         LayoutInflater inflater = LayoutInflater.from(context);
         for(Assignment assignment : assignments) setupAssignment(assignment, holder, inflater);
     }
@@ -67,6 +64,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void toggleViewType(){
         percentMode = !percentMode;
         notifyDataSetChanged();
+    }
+
+    private void initializeLayout(CategoryHolder holder){
+        holder.layoutAssignments.removeAllViews();
+        holder.textNoAssignments.setVisibility(View.VISIBLE);
+        holder.layoutDetails.setVisibility(View.GONE);
     }
 
     private void setupAssignment(Assignment assignment, CategoryHolder holder, LayoutInflater inflater){
@@ -89,7 +92,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                     break;
                 }
             }
-            if (slashIndex == -1) return split[0];
+            if (slashIndex < 1 || slashIndex > split.length - 2) return split[0];
             else return split[slashIndex - 1] + " " + split[slashIndex] + " " + split[slashIndex + 1];
         }
     }

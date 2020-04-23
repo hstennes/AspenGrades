@@ -175,7 +175,6 @@ public class ClassList extends ArrayList<SchoolClass> {
             try{
                 doc = new TermSelector().selectTerm(cookies[0], term, studentOid);
             }catch (IOException e){
-                e.printStackTrace();
                 if(e.getClass().getName().equals("org.jsoup.HttpStatusException"))
                     return new ClassList(term, null, studentOid, SESSION_EXPIRED, taskId);
                 return new ClassList(term, null, studentOid, ASPEN_UNAVAILABLE, taskId);

@@ -95,7 +95,6 @@ public class LoginManager {
                 }
                 return new LoginResult(new Cookies(loginForm.cookies()), SUCCESSFUL, name, isParentAccount);
             }catch (IOException | IndexOutOfBoundsException e){
-                e.printStackTrace();
                 return new LoginResult(null, ASPEN_UNAVAILABLE, name, false);
             }
         }

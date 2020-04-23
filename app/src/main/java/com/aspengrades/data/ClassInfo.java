@@ -138,7 +138,6 @@ public class ClassInfo {
                     return new ClassInfo(null, null, SESSION_EXPIRED);
                 return new ClassInfo(null, null, ASPEN_UNAVAILABLE);
             }catch (IllegalArgumentException | IndexOutOfBoundsException e){
-                e.printStackTrace();
                 return new ClassInfo(null, null, PARSING_ERROR);
             }
         }

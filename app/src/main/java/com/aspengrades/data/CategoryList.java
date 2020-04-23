@@ -40,7 +40,7 @@ public class CategoryList extends ArrayList<Category> {
      */
     public CategoryList readCategories(Cookies cookies, String classId, String token) throws IOException {
         Document doc = getDoc(cookies, classId, token);
-        Element trCumulative = doc.select("tr:contains(Cmulative)").last();
+        Element trCumulative = doc.select("tr:contains(Cumulative)").last();
         try {
             add(new Category(Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""))));
         } catch (NumberFormatException | NullPointerException e){

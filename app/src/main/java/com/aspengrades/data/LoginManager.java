@@ -2,6 +2,8 @@ package com.aspengrades.data;
 
 import android.os.AsyncTask;
 
+import com.aspengrades.util.StringUtil;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -46,7 +48,7 @@ public class LoginManager {
      * A keyword that appears in the header of Aspen when signed into a parent account but NOT when signed into a student account
      * Should probably think of a more reliable system
      */
-    private static final String PARENT_ACCOUNT_KEYWORD = "Family";
+    private static final String[] PARENT_ACCOUNT_KEYWORDS = {"Family", "Familia"};
 
     /**
      * Attempts to login using the given credentials
@@ -88,7 +90,7 @@ public class LoginManager {
                 if(doc == null) return new LoginResult(null, INVALID_CREDENTIALS, name, false);
 
                 String headerText = doc.getElementById("header").text();
-                boolean isParentAccount = headerText.contains(PARENT_ACCOUNT_KEYWORD);
+                boolean isParentAccount = StringUtil.containsAny(headerText, PARENT_ACCOUNT_KEYWORDS);
                 String[] headerStrs = headerText.split(" ");
                 for(int i = 0; i < headerStrs.length - 1; i++){
                     if(headerStrs[i].contains(",")) name = headerStrs[i] + " " + headerStrs[i + 1];

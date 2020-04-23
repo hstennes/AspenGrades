@@ -1,5 +1,7 @@
 package com.aspengrades.data;
 
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,6 +13,11 @@ import java.util.ArrayList;
  * An ArrayList of Categories that can read category data from Aspen
  */
 public class CategoryList extends ArrayList<Category> {
+
+    /**
+     * The logging tag for CategoryList
+     */
+    private static final String TAG = "CategoryList";
 
     /**
      * The number of unused elements at the start of the category table
@@ -31,13 +38,13 @@ public class CategoryList extends ArrayList<Category> {
      * @return The list of categories in the given class
      * @throws IOException If Aspen could not be reached for any reason
      */
-    public CategoryList readCategories(Cookies cookies, String classId, String token) throws IOException{
+    public CategoryList readCategories(Cookies cookies, String classId, String token) throws IOException {
         Document doc = getDoc(cookies, classId, token);
-        Element trCumulative = doc.select("tr:contains(Cumulative)").last();
+        Element trCumulative = doc.select("tr:contains(Cmulative)").last();
         try {
             add(new Category(Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""))));
-        } catch (NumberFormatException e){
-            e.printStackTrace();
+        } catch (NumberFormatException | NullPointerException e){
+            Log.e(TAG, "Cumulative grade information is missing or could not be parsed", e);
         }
         Element tbody = doc.select("tbody:contains(Category)").last();
         for(int i = STARTING_ROWS; i < tbody.children().size() - ENDING_ROWS; i += 2){

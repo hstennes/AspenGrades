@@ -68,7 +68,7 @@ public class AssignmentList extends ArrayList<Assignment> {
         for(int i = 0; i < firstRow.children().size(); i++){
             String text = firstRow.child(i).text();
             if(text.equals("AssignmentName")) indexes[0] = i;
-            else if(text.equals("Category > Desc")) indexes[1] = i;
+            else if(text.matches("Category > Desc|Categoría > Desc")) indexes[1] = i;
             else if(text.equals("Score")) indexes[2] = i;
         }
         return indexes;

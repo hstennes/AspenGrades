@@ -223,8 +223,8 @@ public class ClassList extends ArrayList<SchoolClass> {
             int[] indexes = new int[] {-1, -1};
             for(int i = 0; i < firstRow.children().size(); i++){
                 String text = firstRow.child(i).text();
-                if(text.equals("Description")) indexes[0] = i;
-                else if(text.equals("Term Performance")) indexes[1] = i;
+                if(text.matches("Description|Descripción")) indexes[0] = i;
+                else if(text.matches("Term Performance|Actual Funcionamiento")) indexes[1] = i;
             }
             return indexes;
         }

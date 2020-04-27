@@ -77,27 +77,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         TextView textAssignment = assignmentView.findViewById(R.id.text_assignment);
         textAssignment.setText(assignment.getName());
         TextView textGrade = assignmentView.findViewById(R.id.text_assignment_grade);
-        textGrade.setText(getGradeText(assignment.getScore()));
+        textGrade.setText(percentMode ? assignment.getPercentScore() : assignment.getFractionScore());
         holder.layoutAssignments.addView(assignmentView);
     }
 
-    private String getGradeText(String scoreText){
-        if(percentMode) return scoreText.split(" ")[0];
-        else {
-            String[] split = scoreText.split(" ");
-            int slashIndex = -1;
-            for (int x = 0; x < split.length; x++) {
-                if (split[x].equals("/")) {
-                    slashIndex = x;
-                    break;
-                }
-            }
-            if (slashIndex < 1 || slashIndex > split.length - 2) return split[0];
-            else return split[slashIndex - 1] + " " + split[slashIndex] + " " + split[slashIndex + 1];
-        }
-    }
-
-    class CategoryHolder extends RecyclerView.ViewHolder {
+    static class CategoryHolder extends RecyclerView.ViewHolder {
 
         TextView textCategory, textWeight, textCategoryGrade, textNoAssignments;
         RelativeLayout layoutHeader;

@@ -37,6 +37,13 @@ public class Assignment {
         scores = getScoreTextSmart(row.child(scoreIndex));
     }
 
+    /**
+     * Determines the text to show for the assignment's score.  If the format of the html in the score cell is not recognized, this method falls back
+     * on the simple method for determining score.  Otherwise, the method distinguishes pieces of information based on what cells they appear in within
+     * the score cell.  Assignments out of 0 points (extra credit) are returned in the format +points.
+     * @param scoreCell The cell in the assignment's row containing score information
+     * @return The scores array
+     */
     private String[] getScoreTextSmart(Element scoreCell){
         Element tr = trFromScoreCell(scoreCell);
         if(tr == null) return getScoreTextSimple(scoreCell);
@@ -63,6 +70,13 @@ public class Assignment {
         return getScoreTextSimple(scoreCell);
     }
 
+    /**
+     * Uses a simple method to determine score text based only on the contents of the score cell written as a string.  The text is split into a
+     * list of "words" around spaces.  If a slash is found in the text, the words around the slash are used for the fractional representation and the first
+     * word is used for the percent representation.  If no slash is found, the first word is used for both representations.
+     * @param scoreCell The cell the assignment's row containing score information
+     * @return The scores array
+     */
     private String[] getScoreTextSimple(Element scoreCell){
         String[] split = scoreCell.text().split(" ");
         int slashIndex = -1;
@@ -79,6 +93,12 @@ public class Assignment {
         }
     }
 
+    /**
+     * Gets the <tr> element nested 3 layers within each score cell. This <tr> contains cells that hold each piece of score
+     * related information.
+     * @param scoreCell The score cell
+     * @return The <tr> element, or null if an exception was thrown while finding it
+     */
     private Element trFromScoreCell(Element scoreCell){
         try{
             return scoreCell.child(0).child(0).child(0);
@@ -87,6 +107,11 @@ public class Assignment {
         }
     }
 
+    /**
+     * Searches the <tr> element from trFromScoreCell for a fractional representation of the score.
+     * @param tr The <tr> from trFromScoreCell
+     * @return A FractionParser containing the fraction, or null if no fraction is found
+     */
     private FractionParser fractionParserFromTr(Element tr){
         for(int i = 0; i < tr.children().size(); i++) {
             FractionParser fp = new FractionParser(tr.child(i).text());
@@ -117,6 +142,9 @@ public class Assignment {
         return name + ", " + category + ", " + scores[0];
     }
 
+    /**
+     * A class that checks a string to see if it represents a fraction and holds the resulting data
+     */
     private static class FractionParser {
         public boolean isFraction = false;
         public float numerator;
@@ -138,8 +166,13 @@ public class Assignment {
             }
         }
 
+        /**
+         * If the FractionParser represents a fraction and has a nonzero denominator, this method returns an integer
+         * approximation of the fraction.  Otherwise, the method returns 0.
+         * @return An integer approximation of the fraction if possible, 0 otherwise
+         */
         private int eval(){
-            if(denominator == 0) return 0;
+            if(denominator == 0 || !isFraction) return 0;
             return (int) (numerator / denominator);
         }
     }

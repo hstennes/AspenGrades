@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
     private String password;
     private String name;
     private boolean isParentAccount;
+    private int invalidAttempts = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onInvalidCredentials(){
+        invalidAttempts++;
+        if(invalidAttempts == 2) findViewById(R.id.text_login_help).setVisibility(View.VISIBLE);
         loginUnsuccessful(getString(R.string.text_invalid_credentials));
     }
 

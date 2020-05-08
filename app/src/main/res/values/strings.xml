@@ -8,6 +8,7 @@
     <string name="text_term">Term %1$s</string>
     <string name="text_weight">Weight: %1$s</string>
     <string name="text_no_assignments">No assignments</string>
+    <string name="text_login_help">Can\'t log in?  Make sure you\'re using the same username and password you use for the Aspen website. The app currently only supports Chicago Public Schools</string>
     <string name="button_login">Login</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>

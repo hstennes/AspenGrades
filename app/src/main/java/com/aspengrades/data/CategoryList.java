@@ -44,7 +44,7 @@ public class CategoryList extends ArrayList<Category> {
         try {
             add(new Category(Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""))));
         } catch (NumberFormatException | NullPointerException e){
-            Log.e(TAG, "Cumulative grade information is missing or could not be parsed", e);
+            //The cumulative grade could not be found, so the card will not be present at the top of the page.
         }
         Element tbody = doc.select("tbody:contains(Category)").last();
         for(int i = STARTING_ROWS; i < tbody.children().size() - ENDING_ROWS; i += 2){

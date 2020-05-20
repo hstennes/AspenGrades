@@ -102,7 +102,7 @@ public class Assignment {
     private Element trFromScoreCell(Element scoreCell){
         try{
             return scoreCell.child(0).child(0).child(0);
-        } catch(NullPointerException e){
+        } catch(NullPointerException | IndexOutOfBoundsException e){
             return null;
         }
     }

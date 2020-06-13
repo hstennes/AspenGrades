@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LoginListener {
         this.isParentAccount = isParentAccount;
         saveUsernamePassword();
         Intent intent = new Intent(MainActivity.this, ClassesActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(getString(R.string.extra_cookie_keys), cookies.getKeys());
         intent.putExtra(getString(R.string.extra_cookie_values), cookies.getValues());
         intent.putExtra(getString(R.string.saved_name_key), name);

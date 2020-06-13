@@ -125,14 +125,6 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
-    }
-
-    @Override
     public void onLoginSuccessful(Cookies cookies, String name, boolean isParentAccount) {
         this.cookies = cookies;
         termLoader = new TermLoader(this, cookies);
@@ -183,6 +175,7 @@ public class ClassesActivity extends AppCompatActivity implements LoginListener,
 
     private void relaunchMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(getString(R.string.extra_main_activity_relaunch), true);
         startActivity(intent);
     }

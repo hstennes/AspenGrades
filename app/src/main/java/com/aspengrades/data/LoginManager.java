@@ -114,7 +114,7 @@ public class LoginManager {
                     .data("mobile", "false")
                     .cookies(loginForm.cookies())
                     .post();
-            if(!doc.title().equals("Aspen")) return null;
+            if(!(doc.title().equals("Aspen: Pages") | doc.title().equals("Aspen"))) return null;
             return Jsoup.connect(HOME_PAGE_URL)
                     .cookies(loginForm.cookies())
                     .get();

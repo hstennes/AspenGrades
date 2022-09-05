@@ -53,13 +53,14 @@ public class CategoryList extends ArrayList<Category> {
     public CategoryList readCategories(Cookies cookies, String classId, String token) throws IOException {
         Document doc = getDoc(cookies, classId, token);
         Element trCumulative = doc.select("tr:contains(Cumulative)").last();
-        Element trEmail = doc.select("tr:contains(Primary email)").last();
+        Element trEmail = doc.select("tr:matches((Primary email)|(Email 1))").last();
         try {
             cumulativeGrade = Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""));
         } catch (NumberFormatException | NullPointerException e){
             cumulativeGrade = SchoolClass.BLANK_GRADE;
         }
         if(trEmail != null && trEmail.childNodeSize() > 1) teacherEmail = "(" + trEmail.child(1).text() + ")";
+        else teacherEmail = "";
         Element tbody = doc.select("tbody:contains(Category)").last();
         for(int i = STARTING_ROWS; i < tbody.children().size() - ENDING_ROWS; i += 2){
             add(new Category(tbody.children().get(i), tbody.children().get(i + 1)));

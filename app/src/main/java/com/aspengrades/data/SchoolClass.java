@@ -51,10 +51,16 @@ public class SchoolClass {
      */
     public SchoolClass(Element row, int[] indexes){
         id = row.child(indexes[0]).attr("id");
+
+        //If this results in index out of bounds, allow exception to be caught as this scenario is not recoverable (class name is essential info)
         description = row.child(indexes[0]).text();
-        teacher = row.child(indexes[1]).text();
-        schedule = row.child(indexes[2]).text();
-        clssrm = row.child(indexes[3]).text();
+
+        //If any of these properties were not found, set them to null, which will allow them to be excluded from the displayed info.
+        teacher = indexes[1] == -1 ? null : row.child(indexes[1]).text();
+        schedule = indexes[2] == -1 ? null : row.child(indexes[2]).text();
+        clssrm = indexes[3] == -1 ? null : row.child(indexes[3]).text();
+
+        //Also unrecoverable if not found
         String gradeString = row.child(indexes[4]).text();
         try {
             termGrade = Float.parseFloat(gradeString.replaceAll("[^\\d.]", ""));

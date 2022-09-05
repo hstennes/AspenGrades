@@ -67,12 +67,27 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         else {
             HeaderHolder holder = (HeaderHolder) h;
-            holder.textTeacher.setText(context.getString(R.string.text_teacher, classInfo.getTeacher(), classInfo.getCategoryList().getTeacherEmail()));
-            holder.textSchedule.setText(context.getString(R.string.text_schedule, classInfo.getSchedule()));
-            holder.textClssrm.setText(context.getString(R.string.text_clssrm, classInfo.getClssrm()));
+
+            String teacher = classInfo.getTeacher();
+            if(teacher != null) {
+                holder.textTeacher.setVisibility(View.VISIBLE);
+                holder.textTeacher.setText(context.getString(R.string.text_teacher, classInfo.getTeacher(), classInfo.getCategoryList().getTeacherEmail()));
+            }
+            else holder.textTeacher.setVisibility(View.GONE);
+            setTextIfPresent(holder.textSchedule, R.string.text_schedule, classInfo.getSchedule());
+            setTextIfPresent(holder.textClssrm, R.string.text_clssrm, classInfo.getClssrm());
+
             float cumulativeGrade = classInfo.getCategoryList().getCumulativeGrade();
             holder.textCategoryGrade.setText(cumulativeGrade == SchoolClass.BLANK_GRADE ? "--" : Float.toString(cumulativeGrade));
             holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, cumulativeGrade), PorterDuff.Mode.SRC);
+        }
+    }
+
+    private void setTextIfPresent(TextView view, int resource, String dataValue) {
+        if(dataValue == null) view.setVisibility(View.GONE);
+        else {
+            view.setVisibility(View.VISIBLE);
+            view.setText(context.getString(resource, dataValue));
         }
     }
 

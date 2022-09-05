@@ -14,6 +14,12 @@ import static com.aspengrades.data.AspenTaskStatus.SUCCESSFUL;
  */
 public class ClassInfo {
 
+    private String teacher;
+
+    private String schedule;
+
+    private String clssrm;
+
     /**
      * The list of Categories in the class. Also contains the cumulative grade from the categories page.
      */
@@ -85,6 +91,24 @@ public class ClassInfo {
 
     public AspenTaskStatus getStatus(){
         return status;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public String getClssrm() {
+        return clssrm;
+    }
+
+    public void addExtraInfo(String teacher, String schedule, String clssrm){
+        this.teacher = teacher;
+        this.schedule = schedule;
+        this.clssrm = clssrm;
     }
 
     /**

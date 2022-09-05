@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 /**
@@ -30,6 +31,12 @@ public class CategoryList extends ArrayList<Category> {
     private static final int ENDING_ROWS = 2;
 
     /**
+     * The cumulative grade for the class. This data is stored in CategoryList because it is found on the page where categories
+     * are read.
+     */
+    private float cumulativeGrade;
+
+    /**
      * Returns a CategoryList for the given class. The class must be in the currently selected term or the result will default to the
      * first class in that term.
      * @param cookies The cookies from LoginManager
@@ -42,15 +49,19 @@ public class CategoryList extends ArrayList<Category> {
         Document doc = getDoc(cookies, classId, token);
         Element trCumulative = doc.select("tr:contains(Cumulative)").last();
         try {
-            add(new Category(Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""))));
+            cumulativeGrade = Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""));
         } catch (NumberFormatException | NullPointerException e){
-            //The cumulative grade could not be found, so the card will not be present at the top of the page.
+            cumulativeGrade = SchoolClass.BLANK_GRADE;
         }
         Element tbody = doc.select("tbody:contains(Category)").last();
         for(int i = STARTING_ROWS; i < tbody.children().size() - ENDING_ROWS; i += 2){
             add(new Category(tbody.children().get(i), tbody.children().get(i + 1)));
         }
         return this;
+    }
+
+    public float getCumulativeGrade(){
+        return cumulativeGrade;
     }
 
     /**

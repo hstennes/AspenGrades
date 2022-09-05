@@ -18,7 +18,7 @@ import com.aspengrades.data.ClassInfo;
 import com.aspengrades.data.SchoolClass;
 import com.aspengrades.util.ColorUtil;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ClassInfo classInfo;
     private Context context;
@@ -32,28 +32,49 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @NonNull
     @Override
-    public CategoryHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        if(viewType == 1) {
+            View view = LayoutInflater.from(context).inflate(R.layout.card_class_header, viewGroup, false);
+            return new HeaderHolder(view);
+        }
         View view = LayoutInflater.from(context).inflate(R.layout.card_category, viewGroup, false);
         return new CategoryHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryHolder holder, int i) {
-        initializeLayout(holder);
-        Category category = classInfo.getCategoryList().get(i);
-        holder.textCategory.setText(category.getName());
-        holder.textCategoryGrade.setText(category.getGrade() == SchoolClass.BLANK_GRADE ? "" : Float.toString(category.getGrade()));
-        holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
-        if(category.isCumulative()) return;
+    public int getItemViewType(int position) {
+        return position == 0 ? 1 : 0;
+    }
 
-        holder.layoutDetails.setVisibility(View.VISIBLE);
-        holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
-        AssignmentList assignments = classInfo.fromCategory(category.getName());
-        if(assignments.size() == 0) return;
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder h, int i) {
+        if(h.getItemViewType() == 0) {
+            CategoryHolder holder = (CategoryHolder) h;
+            initializeLayout(holder);
+            Category category = classInfo.getCategoryList().get(i);
+            holder.textCategory.setText(category.getName());
+            holder.textCategoryGrade.setText(category.getGrade() == SchoolClass.BLANK_GRADE ? "" : Float.toString(category.getGrade()));
+            holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
+            if (category.isCumulative()) return;
 
-        holder.textNoAssignments.setVisibility(View.GONE);
-        LayoutInflater inflater = LayoutInflater.from(context);
-        for(Assignment assignment : assignments) setupAssignment(assignment, holder, inflater);
+            holder.layoutDetails.setVisibility(View.VISIBLE);
+            holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
+            AssignmentList assignments = classInfo.fromCategory(category.getName());
+            if (assignments.size() == 0) return;
+
+            holder.textNoAssignments.setVisibility(View.GONE);
+            LayoutInflater inflater = LayoutInflater.from(context);
+            for (Assignment assignment : assignments) setupAssignment(assignment, holder, inflater);
+        }
+        else {
+            HeaderHolder holder = (HeaderHolder) h;
+            holder.textTeacher.setText(context.getString(R.string.text_teacher, classInfo.getTeacher()));
+            holder.textSchedule.setText(context.getString(R.string.text_schedule, classInfo.getSchedule()));
+            holder.textClssrm.setText(context.getString(R.string.text_clssrm, classInfo.getClssrm()));
+            float cumulativeGrade = classInfo.getCategoryList().getCumulativeGrade();
+            holder.textCategoryGrade.setText(cumulativeGrade == SchoolClass.BLANK_GRADE ? "" : Float.toString(cumulativeGrade));
+            holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, cumulativeGrade), PorterDuff.Mode.SRC);
+        }
     }
 
     @Override
@@ -96,6 +117,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             layoutHeader = view.findViewById(R.id.layout_header);
             layoutAssignments = view.findViewById(R.id.layout_assignments);
             layoutDetails = view.findViewById(R.id.layout_details);
+        }
+    }
+
+    static class HeaderHolder extends RecyclerView.ViewHolder {
+
+        TextView textCategoryGrade, textTeacher, textSchedule, textClssrm;
+        RelativeLayout layoutHeader;
+
+        public HeaderHolder(@NonNull View view) {
+            super(view);
+            textCategoryGrade = view.findViewById(R.id.text_grade);
+            textTeacher = view.findViewById(R.id.text_teacher);
+            textSchedule = view.findViewById(R.id.text_schedule);
+            textClssrm = view.findViewById(R.id.text_clssrm);
+            layoutHeader = view.findViewById((R.id.layout_header));
         }
     }
 }

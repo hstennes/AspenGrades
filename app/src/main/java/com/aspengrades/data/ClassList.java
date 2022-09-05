@@ -208,7 +208,7 @@ public class ClassList extends ArrayList<SchoolClass> {
             }
             int[] indexes = getInfoIndexes(tbody.child(0));
             for(int i = 1; i < tbody.children().size() - 1; i++){
-                classes.add(new SchoolClass(tbody.child(i), indexes[0], indexes[1]));
+                classes.add(new SchoolClass(tbody.child(i), indexes));
             }
             return classes;
         }
@@ -217,14 +217,17 @@ public class ClassList extends ArrayList<SchoolClass> {
          * Determines the indexes in the classes table for each piece of information. The first value is the index for the
          * description and the second for the grade.
          * @param firstRow The first row of the table, which contains the titles for each column
-         * @return The indexes (column numbers) for each piece of important information
+         * @return The indexes (column numbers) for each piece of important information (Class name, teacher, schedule, classroom, grade)
          */
         private int[] getInfoIndexes(Element firstRow){
-            int[] indexes = new int[] {-1, -1};
+            int[] indexes = new int[] {-1, -1, -1, -1, -1};
             for(int i = 0; i < firstRow.children().size(); i++){
                 String text = firstRow.child(i).text();
                 if(text.matches("Description|Descripción")) indexes[0] = i;
-                else if(text.matches("Term Performance|Actual Funcionamiento")) indexes[1] = i;
+                else if(text.matches("Teacher|Profesor")) indexes[1] = i;
+                else if(text.matches("Schedule|Horario")) indexes[2] = i;
+                else if(text.matches("Clssrm")) indexes[3] = i;
+                else if(text.matches("Term Performance|Actual Funcionamiento")) indexes[4] = i;
             }
             return indexes;
         }

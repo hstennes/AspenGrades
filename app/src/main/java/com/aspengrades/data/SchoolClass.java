@@ -25,6 +25,21 @@ public class SchoolClass {
     private String description;
 
     /**
+     * The teacher's name
+     */
+    private String teacher;
+
+    /**
+     * The schedule (period) of the class
+     */
+    private String schedule;
+
+    /**
+     * The classroom
+     */
+    private String clssrm;
+
+    /**
      * The current grade in the class
      */
     private float termGrade;
@@ -32,13 +47,15 @@ public class SchoolClass {
     /**
      * Creates a new SchoolClass
      * @param row The row in the classes table containing info about the class
-     * @param descriptionIndex the index in the row that contains that class description
-     * @param gradeIndex the index in the row that contains the grade
+     * @param indexes The column indexes in the table containing each piece of information {class name, teacher, schedule, classroom, grade}
      */
-    public SchoolClass(Element row, int descriptionIndex, int gradeIndex){
-        id = row.child(descriptionIndex).attr("id");
-        description = row.child(descriptionIndex).text();
-        String gradeString = row.child(gradeIndex).text();
+    public SchoolClass(Element row, int[] indexes){
+        id = row.child(indexes[0]).attr("id");
+        description = row.child(indexes[0]).text();
+        teacher = row.child(indexes[1]).text();
+        schedule = row.child(indexes[2]).text();
+        clssrm = row.child(indexes[3]).text();
+        String gradeString = row.child(indexes[4]).text();
         try {
             termGrade = Float.parseFloat(gradeString.replaceAll("[^\\d.]", ""));
         } catch (NumberFormatException e){
@@ -54,6 +71,18 @@ public class SchoolClass {
         return description;
     }
 
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public String getClssrm() {
+        return clssrm;
+    }
+
     public float getTermGrade() {
         return termGrade;
     }
@@ -61,6 +90,6 @@ public class SchoolClass {
     @Override
     @NonNull
     public String toString(){
-        return id + ", " + description + ", " + termGrade;
+        return id + ", " + description + ", " + teacher + ", " + schedule + ", " + clssrm + ", " + termGrade;
     }
 }

@@ -9,9 +9,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/drawable/background_class_button.xml" value="0.1" />
+        <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout-v26/card_class_header.xml" value="0.5489583333333333" />
+        <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/activity_assignments.xml" value="0.55" />
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/activity_classes.xml" value="0.5541666666666667" />
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/activity_main.xml" value="0.24444444444444444" />
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/assignment.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/card_category.xml" value="0.2674772036474164" />
+        <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/card_class_header.xml" value="0.5489583333333333" />
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/class_button.xml" value="0.34193840579710144" />
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/layout/fragment_term.xml" value="0.34193840579710144" />
         <entry key="..\:/Users/HPste/StudioProjects/AspenGrades/app/src/main/res/menu/menu_classes.xml" value="0.36666666666666664" />

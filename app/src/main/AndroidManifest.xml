@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name="com.aspengrades.main.MainActivity"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -21,9 +22,11 @@
         </activity>
         <activity android:name=".ClassesActivity"
             android:theme="@style/AppTheme"
+            android:exported="false"
             android:screenOrientation="portrait"/>
         <activity android:name=".AssignmentsActivity"
             android:theme="@style/AppTheme"
+            android:exported="false"
             android:screenOrientation="portrait"/>
     </application>
 

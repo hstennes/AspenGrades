@@ -30,6 +30,12 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
 
     private CategoryAdapter adapter;
 
+    private String teacher;
+
+    private String schedule;
+
+    private String clssrm;
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         setContentView(R.layout.activity_assignments);
@@ -42,6 +48,9 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
             getSupportActionBar().setTitle(intent.getStringExtra(getString(R.string.extra_class_description)));
         String id = intent.getStringExtra(getString(R.string.extra_class_id));
         String token = intent.getStringExtra(getString(R.string.extra_token));
+        teacher = intent.getStringExtra(getString(R.string.extra_teacher));
+        schedule = intent.getStringExtra(getString(R.string.extra_schedule));
+        clssrm = intent.getStringExtra(getString(R.string.extra_clssrm));
         int term = intent.getIntExtra(getString(R.string.extra_term), 0);
         String[] keys = intent.getStringArrayExtra(getString(R.string.extra_cookie_keys));
         String[] values = intent.getStringArrayExtra(getString(R.string.extra_cookie_values));
@@ -67,6 +76,7 @@ public class AssignmentsActivity extends AppCompatActivity implements ClassInfoL
 
     @Override
     public void onClassInfoRead(ClassInfo classInfo) {
+        classInfo.addExtraInfo(teacher, schedule, clssrm);
         ProgressBar progressBar = findViewById(R.id.progress_circular);
         progressBar.setVisibility(View.GONE);
         AspenTaskStatus status  = classInfo.getStatus();

@@ -6,7 +6,11 @@
     <string name="text_parsing_error">Could not read Aspen data</string>
     <string name="text_no_classes">Nothing here yet&#8230;</string>
     <string name="text_term">Term %1$s</string>
+    <string name="text_cumulative_grade">Cumulative grade</string>
     <string name="text_weight">Weight: %1$s</string>
+    <string name="text_teacher">Teacher: %1$s</string>
+    <string name="text_schedule">Period: %1$s</string>
+    <string name="text_clssrm">Classroom: %1$s</string>
     <string name="text_no_assignments">No assignments</string>
     <string name="text_login_help">Can\'t log in?  Make sure you\'re using the same username and password you use for the Aspen website. The app currently only supports Chicago Public Schools</string>
     <string name="button_login">Login</string>
@@ -19,6 +23,10 @@
     <string name="extra_term">term</string>
     <string name="extra_class_description">description</string>
     <string name="extra_main_activity_relaunch">relaunch</string>
+    <string name="extra_teacher">teacher</string>
+    <string name="extra_schedule">schedule</string>
+    <string name="extra_clssrm">clssrm</string>
+    <string name="extra_grade">grade</string>
     <string name="action_logout">logout</string>
     <string name="action_refresh">refresh</string>
     <string name="action_swap_assignment_view">toggle view</string>

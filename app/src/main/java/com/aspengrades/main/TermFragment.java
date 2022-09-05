@@ -29,8 +29,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
 
     private ClassList classList;
     private ClassesActivity classesActivity;
-    private HashMap<View, String> idMap;
-    private HashMap<View, String> nameMap;
+    private HashMap<View, SchoolClass> btnToClass;
     private int term;
 
     @Override
@@ -62,8 +61,12 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getContext(), AssignmentsActivity.class);
-        intent.putExtra(getString(R.string.extra_class_id), idMap.get(v));
-        intent.putExtra(getString(R.string.extra_class_description), nameMap.get(v));
+        SchoolClass schoolClass = btnToClass.get(v);
+        intent.putExtra(getString(R.string.extra_class_id), schoolClass.getId());
+        intent.putExtra(getString(R.string.extra_class_description), schoolClass.getDescription());
+        intent.putExtra(getString(R.string.extra_teacher), schoolClass.getTeacher());
+        intent.putExtra(getString(R.string.extra_schedule), schoolClass.getSchedule());
+        intent.putExtra(getString(R.string.extra_clssrm), schoolClass.getClssrm());
         intent.putExtra(getString(R.string.extra_token), classList.getToken());
         intent.putExtra(getString(R.string.extra_cookie_keys), classesActivity.getCookies().getKeys());
         intent.putExtra(getString(R.string.extra_cookie_values), classesActivity.getCookies().getValues());
@@ -79,8 +82,7 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
 
         for(SchoolClass schoolClass : classList) {
             View classButton = getLayoutInflater().inflate(R.layout.class_button, classesLayout, false);
-            idMap.put(classButton, schoolClass.getId());
-            nameMap.put(classButton, schoolClass.getDescription());
+            btnToClass.put(classButton, schoolClass);
             term = classList.getTerm();
 
             TextView description = classButton.findViewById(R.id.text_description);
@@ -116,15 +118,13 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
     public void setParams(ClassList classList, ClassesActivity classesActivity){
         this.classList = classList;
         this.classesActivity = classesActivity;
-        idMap = new HashMap<>();
-        nameMap = new HashMap<>();
+        btnToClass = new HashMap<>();
     }
 
     public void reset(){
         View view = getView();
         classList = null;
-        idMap.clear();
-        nameMap.clear();
+        btnToClass.clear();
         if(view != null) {
             view.findViewById(R.id.progress_circular).setVisibility(View.VISIBLE);
             view.findViewById(R.id.text_status).setVisibility(View.INVISIBLE);

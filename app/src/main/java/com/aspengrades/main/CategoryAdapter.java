@@ -51,11 +51,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(h.getItemViewType() == 0) {
             CategoryHolder holder = (CategoryHolder) h;
             initializeLayout(holder);
-            Category category = classInfo.getCategoryList().get(i);
+            Category category = classInfo.getCategoryList().get(i - 1);
             holder.textCategory.setText(category.getName());
             holder.textCategoryGrade.setText(category.getGrade() == SchoolClass.BLANK_GRADE ? "" : Float.toString(category.getGrade()));
             holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, category.getGrade()), PorterDuff.Mode.SRC);
-            if (category.isCumulative()) return;
 
             holder.layoutDetails.setVisibility(View.VISIBLE);
             holder.textWeight.setText(context.getString(R.string.text_weight, category.getWeight()));
@@ -68,18 +67,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         else {
             HeaderHolder holder = (HeaderHolder) h;
-            holder.textTeacher.setText(context.getString(R.string.text_teacher, classInfo.getTeacher()));
+            holder.textTeacher.setText(context.getString(R.string.text_teacher, classInfo.getTeacher(), classInfo.getCategoryList().getTeacherEmail()));
             holder.textSchedule.setText(context.getString(R.string.text_schedule, classInfo.getSchedule()));
             holder.textClssrm.setText(context.getString(R.string.text_clssrm, classInfo.getClssrm()));
             float cumulativeGrade = classInfo.getCategoryList().getCumulativeGrade();
-            holder.textCategoryGrade.setText(cumulativeGrade == SchoolClass.BLANK_GRADE ? "" : Float.toString(cumulativeGrade));
+            holder.textCategoryGrade.setText(cumulativeGrade == SchoolClass.BLANK_GRADE ? "--" : Float.toString(cumulativeGrade));
             holder.layoutHeader.getBackground().setColorFilter(ColorUtil.colorFromGrade(context, cumulativeGrade), PorterDuff.Mode.SRC);
         }
     }
 
     @Override
     public int getItemCount() {
-        return classInfo.getCategoryList().size();
+        return classInfo.getCategoryList().size() + 1;
     }
 
     public void toggleViewType(){

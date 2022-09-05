@@ -8,7 +8,7 @@
     <string name="text_term">Term %1$s</string>
     <string name="text_cumulative_grade">Cumulative grade</string>
     <string name="text_weight">Weight: %1$s</string>
-    <string name="text_teacher">Teacher: %1$s</string>
+    <string name="text_teacher">Teacher: %1$s %2$s</string>
     <string name="text_schedule">Period: %1$s</string>
     <string name="text_clssrm">Classroom: %1$s</string>
     <string name="text_no_assignments">No assignments</string>

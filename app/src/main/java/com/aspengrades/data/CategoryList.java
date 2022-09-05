@@ -37,6 +37,11 @@ public class CategoryList extends ArrayList<Category> {
     private float cumulativeGrade;
 
     /**
+     * The teacher email. This data is stored in CategoryList because it is found on the page where categories are read.
+     */
+    private String teacherEmail;
+
+    /**
      * Returns a CategoryList for the given class. The class must be in the currently selected term or the result will default to the
      * first class in that term.
      * @param cookies The cookies from LoginManager
@@ -48,11 +53,13 @@ public class CategoryList extends ArrayList<Category> {
     public CategoryList readCategories(Cookies cookies, String classId, String token) throws IOException {
         Document doc = getDoc(cookies, classId, token);
         Element trCumulative = doc.select("tr:contains(Cumulative)").last();
+        Element trEmail = doc.select("tr:contains(Primary email)").last();
         try {
             cumulativeGrade = Float.parseFloat(trCumulative.text().replaceAll("[^.?0-9]+", ""));
         } catch (NumberFormatException | NullPointerException e){
             cumulativeGrade = SchoolClass.BLANK_GRADE;
         }
+        if(trEmail != null && trEmail.childNodeSize() > 1) teacherEmail = "(" + trEmail.child(1).text() + ")";
         Element tbody = doc.select("tbody:contains(Category)").last();
         for(int i = STARTING_ROWS; i < tbody.children().size() - ENDING_ROWS; i += 2){
             add(new Category(tbody.children().get(i), tbody.children().get(i + 1)));
@@ -63,6 +70,8 @@ public class CategoryList extends ArrayList<Category> {
     public float getCumulativeGrade(){
         return cumulativeGrade;
     }
+
+    public String getTeacherEmail() {return teacherEmail;}
 
     /**
      * Returns the "Details" page as a JSoup Document

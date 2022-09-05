@@ -10,11 +10,6 @@ import org.jsoup.nodes.Element;
 public class Category {
 
     /**
-     * The text used for a category representing the cumulative grade
-     */
-    private final static String CUMULATIVE_TEXT = "Cumulative grade";
-
-    /**
      * The name of the category
      */
     private String name;
@@ -30,11 +25,6 @@ public class Category {
     private float grade;
 
     /**
-     * True if this category represents the cumulative grade, which occurs if the constructor Category(float grade) is used
-     */
-    private boolean cumulative = false;
-
-    /**
      * Creates a new Category based on the given JSoup elements from the details page of Aspen
      * @param nameRow The first row in the description of the category, which contains the name and weight
      * @param gradeRow The second row in the description of the category, which contains the grade
@@ -48,17 +38,6 @@ public class Category {
         if(gradeString.length() > 0) grade = Float.parseFloat(gradeString.substring(0, gradeString.length() - 2));
     }
 
-    /**
-     * Creates a new Category that represents the cumulative grade for the class. The category name is set to "Cumulative grade" and weight is set to an empty string.
-     * @param grade The cumulative grade in the class
-     */
-    public Category(float grade){
-        cumulative = true;
-        name = CUMULATIVE_TEXT;
-        weight = "";
-        this.grade = grade;
-    }
-
     public String getName() {
         return name;
     }
@@ -69,10 +48,6 @@ public class Category {
 
     public float getGrade() {
         return grade;
-    }
-
-    public boolean isCumulative(){
-        return cumulative;
     }
 
     @Override

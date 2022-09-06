@@ -67,7 +67,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         else {
             HeaderHolder holder = (HeaderHolder) h;
-
             String teacher = classInfo.getTeacher();
             if(teacher != null && !teacher.equals("")) {
                 holder.textTeacher.setVisibility(View.VISIBLE);

@@ -89,10 +89,10 @@ public class TermFragment extends Fragment implements View.OnClickListener, Clas
             TextView grade = classButton.findViewById(R.id.text_grade);
             description.setText(schoolClass.getDescription());
             float gradeVal = schoolClass.getTermGrade();
-            if (gradeVal != -1) {
+            if (gradeVal != SchoolClass.BLANK_GRADE) {
                 grade.setText(String.format(Locale.getDefault(), "%.2f", gradeVal));
-                classButton.setOnClickListener(this);
             }
+            classButton.setOnClickListener(this);
             classButton.getBackground().setColorFilter(ColorUtil.colorFromGrade(getContext(), gradeVal), PorterDuff.Mode.SRC);
             classesLayout.addView(classButton);
         }

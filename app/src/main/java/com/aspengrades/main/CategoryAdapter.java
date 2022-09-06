@@ -69,7 +69,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             HeaderHolder holder = (HeaderHolder) h;
 
             String teacher = classInfo.getTeacher();
-            if(teacher != null) {
+            if(teacher != null && !teacher.equals("")) {
                 holder.textTeacher.setVisibility(View.VISIBLE);
                 holder.textTeacher.setText(context.getString(R.string.text_teacher, classInfo.getTeacher(), classInfo.getCategoryList().getTeacherEmail()));
             }
